@@ -28,27 +28,25 @@ app.use((request, response, next) => {
     app.use(cors());
 
     next();
-
 })
 
 //Define que os dados que irão chegar no body da requisição será no padrão JSON
 const bodyParserJSON = bodyParser.json();
 
-
+//Import das controllers
 var controllerAluno = require('./controller/controller_aluno.js');
 var controllerProfessor = require('./controller/controller_professor.js');
 var controllerTipoUsuario = require('./controller/controller_tipoUsuario.js');
 var controllerCurso = require('./controller/controller_curso.js')
 
-
-
-
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
+
 
 /********************************
 * Objetivo : API de controle de TIPO_USUARIO
 * Data : 25/05/2023
 ********************************/
+
 
 //EndPoint: Post - Insere um tipo de usuario
 app.post('/v1/mecanica/tipo/usuario', cors(), bodyParserJSON, async function (request, response) {
@@ -72,13 +70,13 @@ app.post('/v1/mecanica/tipo/usuario', cors(), bodyParserJSON, async function (re
 
 //EndPoint: Get - Retorna todos os tipos de usuario
 app.get('/v1/mecanica/tipos', cors(), async function (request, response) {
-    
+
     //Recebe os dados da controller
     let dados = await controllerTipoUsuario.getTipoUsuario();
 
     response.status(dados.status)
     response.json(dados)
-    
+
 });
 
 /////////////////////////////////////////Aluno//////////////////////////////////////////////
@@ -108,7 +106,6 @@ app.post('/v1/mecanica/aluno', cors(), bodyParserJSON, async function (request, 
 
 });
 
-
 //EndPoint: Delete - Exclui um aluno existente, filtrando pelo ID
 app.delete('/v1/mecanica/aluno/:id', cors(), async function (request, response) {
     let idAluno = request.params.id
@@ -136,7 +133,7 @@ app.put('/v1/mecanica/aluno/:id', cors(), bodyParserJSON, async function (reques
 
         let dadosBody = request.body
 
-        let resultDadosCurso = await controllerCurso.inserirCurso(dadosBody,idAluno)
+        let resultDadosCurso = await controllerCurso.inserirCurso(dadosBody, idAluno)
 
         response.status(resultDadosCurso.status)
         response.json(resultDadosCurso)
@@ -162,8 +159,6 @@ app.get('/v1/mecanica/aluno/id/:id', cors(), async function (request, response) 
 app.get('/v1/mecanica/aluno/nome/:nome', cors(), async function (request, response) {
 
     let nome = request.params.nome;
-
-
     let dadosAluno = await controllerAluno.getBuscarAlunoNome(nome);
 
     if (dadosAluno) {
@@ -175,7 +170,7 @@ app.get('/v1/mecanica/aluno/nome/:nome', cors(), async function (request, respon
     }
 });
 
-//EndPoint: Retorna todos os aluno
+//EndPoint: Retorna todos os alunos
 app.get('/v1/mecanica/aluno', cors(), async function (request, response) {
     let dadosAluno = await controllerAluno.getAlunos()
 
@@ -191,21 +186,78 @@ app.post('v1/mecanica/curso', cors(), bodyParserJSON, async function (request, r
     let contentType = request.headers['content-type']
 
     if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
 
-        let resultDadosAluno = await controllerAluno.deletarAluno(idAluno)
+        let resultDadosCurso = await controllerCurso.inserirCurso(dadosBody);
 
-        if (resultDadosAluno) {
-            response.json(resultDadosAluno)
-            response.status(message.SUCESS_DELETED_ITEM.status)
-        } else {
-            response.json()
-            response.status(message.ERROR_NOT_FOUND.status)
-        }
+        response.status(resultDadosCurso.status)
+        response.json(resultDadosCurso)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
+
+});
+
+//EndPoint: Atualiza curso pelo id
+app.post('v1/mecanica/curso:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe o id do curso pelo parametro
+        let idCurso = request.params.id;
+
+        //Recebe os dados do curso encaminhado no corpo da requisição
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDadosCurso = await controllerCurso.atualizarCurso(dadosBody, idCurso);
+
+        response.status(resultDadosCurso.status)
+        response.json(resultDadosCurso)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui um curso existente, filtrando pelo ID
+app.post('v1/mecanica/curso:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idCurso = request.params.id;
+
+    let controllerCurso = require('./controller/controller_curso.js')
+
+    //Recebe os dados do curso encaminhado no corpo da requisição 
+    let resultDadosCurso = await controllerCurso.deletarCurso(idCurso)
+
+    if (resultDadosCurso) {
+       response.json(resultDadosCurso);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+//EndPoint: Retorna todos os cursos
+app.post('v1/mecanica/curso', cors(), bodyParserJSON, async function (request, response) {
+ 
+     //Recebe os dados da controller do curso
+     let dadosCurso = await controllerCurso.getCursos()
+
+     response.status(dadosCurso.status)
+     response.json(dadosCurso)
 });
 
 
-///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////Professor///////////////////////////////////////////////////
 
 /********************************
 * Objetivo : API de controle de PROFESSOR
@@ -276,7 +328,6 @@ app.get('/v1/mecanica/professor/id/:id', cors(), async function (request, respon
     response.status(dadosProfessor.status)
     response.json(dadosProfessor)
 });
-
 
 //EndPoint: Retorna todos os professores
 app.get('/v1/mecanica/professor', cors(), async function (request, response) {

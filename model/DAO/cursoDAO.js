@@ -23,16 +23,7 @@ const insertCurso = async function(dadosCurso) {
         '${dadosCurso.descricao}',
         '${dadosCurso.carga_horaria}'
     )`
-
-<<<<<<< HEAD
-    let resultStatus = await prisma.$executeRawUnsafe(sql)
-
-    if(resultStatus)
-        return true
-    else
-        return 
        
-=======
     //Executa o scrip sql no banco de dados        
     let resultStatus = await prisma.$executeRawUnsafe(sql);
     if (resultStatus) {
@@ -40,7 +31,7 @@ const insertCurso = async function(dadosCurso) {
     } else {
         return false;
     }
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
+
 }
 
 
@@ -70,8 +61,7 @@ const updateCurso = async function(dadosCurso) {
             `
 
     //Executa o scriptSQL no BD
-    let resultStatus = await prisma.$executeRawUnsafe(sql)
-    ;
+    let resultStatus = await prisma.$executeRawUnsafe(sql);
       if (resultStatus) {
           return true;
       } else {
@@ -93,7 +83,7 @@ const selectAllCursos = async function() {
     }
 }
 
-<<<<<<< HEAD
+
 const selectLastId = async function() {
     let sql = `select * from tbl_curso order by id desc limit 1;`
 
@@ -105,7 +95,7 @@ const selectLastId = async function() {
         return false
 }
 
-=======
+
 const selectCursoByID = async function (id) {
     let idCurso = id
 
@@ -122,15 +112,12 @@ const selectCursoByID = async function (id) {
 }
 
 
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
+
 module.exports = {
     insertCurso,
     deleteCurso,
     updateCurso,
     selectAllCursos,
-<<<<<<< HEAD
-    selectLastId
-=======
+    selectLastId,
     selectCursoByID
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
 }

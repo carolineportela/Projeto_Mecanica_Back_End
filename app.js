@@ -34,34 +34,31 @@ app.use((request, response, next) => {
 //Define que os dados que irão chegar no body da requisição será no padrão JSON
 const bodyParserJSON = bodyParser.json();
 
-<<<<<<< HEAD
+
+var controllerAluno = require('./controller/controller_aluno.js');
+var controllerProfessor = require('./controller/controller_professor.js');
 var controllerTipoUsuario = require('./controller/controller_tipoUsuario.js');
 var controllerCurso = require('./controller/controller_curso.js')
 
 
+
+
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de TIPO_USUARIO
+* Data : 25/05/2023
+********************************/
+
 //EndPoint: Post - Insere um tipo de usuario
-app.post('/v1/mecanica/tipo/usuario', cors(), bodyParserJSON, async function (request, response) { 
+app.post('/v1/mecanica/tipo/usuario', cors(), bodyParserJSON, async function (request, response) {
 
-    let contentType =  request.headers['content-type']
-
-    if(String(contentType).toLowerCase() == 'application/json') {
-        let dadosBody = request.body
-
-        let resulDados = await controllerTipoUsuario.inserirTipoUsuario(dadosBody)
-=======
-var controllerAluno = require('./controller/controller_aluno.js');
-var controllerProfessor = require('./controller/controller_professor.js');
-
-//EndPoint: Post - Insere um aluno novo 
-app.post('/v1/mecanica/aluno', cors(), bodyParserJSON, async function (request, response) {
     let contentType = request.headers['content-type']
 
     if (String(contentType).toLowerCase() == 'application/json') {
-
         let dadosBody = request.body
-        let resulDadosAluno = await controllerAluno.inserirAluno(dadosBody)
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
+
+        let resulDados = await controllerTipoUsuario.inserirTipoUsuario(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)
@@ -72,30 +69,52 @@ app.post('/v1/mecanica/aluno', cors(), bodyParserJSON, async function (request, 
 
 });
 
-<<<<<<< HEAD
+
 //EndPoint: Get - Retorna todos os tipos de usuario
-app.get('/v1/mecanica/tipos', cors(),  async function (request, response) { 
-=======
+app.get('/v1/mecanica/tipos', cors(), async function (request, response) {
+    
+    //Recebe os dados da controller
+    let dados = await controllerTipoUsuario.getTipoUsuario();
+
+    response.status(dados.status)
+    response.json(dados)
+    
+});
+
+/////////////////////////////////////////Aluno//////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de ALUNO
+* Data : 25/05/2023
+********************************/
+
+
+//EndPoint: Post - Insere um aluno novo 
+app.post('/v1/mecanica/aluno', cors(), bodyParserJSON, async function (request, response) {
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body
+        let resulDadosAluno = await controllerAluno.inserirAluno(dadosBody)
+
+        response.status(resulDadosAluno.status)
+        response.json(resulDadosAluno)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
 //EndPoint: Delete - Exclui um aluno existente, filtrando pelo ID
 app.delete('/v1/mecanica/aluno/:id', cors(), async function (request, response) {
     let idAluno = request.params.id
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
 
-    let dados = await controllerTipoUsuario.getTipoUsuario()
+    let controllerAluno = require('./controller/controller_aluno.js')
 
-<<<<<<< HEAD
-    response.json(dados)
-});
-
-///////////////////////////////////////Curso//////////////////////////////////////////////////////
-
-//EndPoint: Post - Insere um novo curso
-app.post('v1/mecanica/curso', cors(), bodyParserJSON, async function (request, response) {
-    
-    let contentType =  request.headers['content-type']
-
-    if(String(contentType).toLowerCase() == 'application/json') {
-=======
     let resultDadosAluno = await controllerAluno.deletarAluno(idAluno)
 
     if (resultDadosAluno) {
@@ -105,6 +124,7 @@ app.post('v1/mecanica/curso', cors(), bodyParserJSON, async function (request, r
         response.json()
         response.status(message.ERROR_NOT_FOUND.status)
     }
+
 });
 
 //EndPoint: Put - Atualiza um aluno existente, filtrando pelo ID
@@ -114,10 +134,9 @@ app.put('/v1/mecanica/aluno/:id', cors(), bodyParserJSON, async function (reques
     if (String(contentType).toLowerCase() == 'application/json') {
         let idAluno = request.params.id
 
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
         let dadosBody = request.body
 
-        let resultDadosCurso = await  controllerCurso.inserirCurso(dadosBody)
+        let resultDadosCurso = await controllerCurso.inserirCurso(dadosBody,idAluno)
 
         response.status(resultDadosCurso.status)
         response.json(resultDadosCurso)
@@ -126,18 +145,8 @@ app.put('/v1/mecanica/aluno/:id', cors(), bodyParserJSON, async function (reques
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
 
-<<<<<<< HEAD
+
 })
-
-
-=======
-//EndPoint: Retorna todos os aluno
-app.get('/v1/mecanica/aluno', cors(), async function (request, response) {
-    let dadosAluno = await controllerAluno.getAlunos()
-
-    response.status(dadosAluno.status)
-    response.json(dadosAluno)
-});
 
 //EndPoint: Retorna o aluno filtrando pelo ID 
 app.get('/v1/mecanica/aluno/id/:id', cors(), async function (request, response) {
@@ -164,7 +173,37 @@ app.get('/v1/mecanica/aluno/nome/:nome', cors(), async function (request, respon
         response.json();
         response.status(404);
     }
-})
+});
+
+//EndPoint: Retorna todos os aluno
+app.get('/v1/mecanica/aluno', cors(), async function (request, response) {
+    let dadosAluno = await controllerAluno.getAlunos()
+
+    response.status(dadosAluno.status)
+    response.json(dadosAluno)
+});
+
+///////////////////////////////////////Curso//////////////////////////////////////////////////////
+
+//EndPoint: Post - Insere um novo curso
+app.post('v1/mecanica/curso', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let resultDadosAluno = await controllerAluno.deletarAluno(idAluno)
+
+        if (resultDadosAluno) {
+            response.json(resultDadosAluno)
+            response.status(message.SUCESS_DELETED_ITEM.status)
+        } else {
+            response.json()
+            response.status(message.ERROR_NOT_FOUND.status)
+        }
+    }
+});
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -246,17 +285,9 @@ app.get('/v1/mecanica/professor', cors(), async function (request, response) {
     response.status(dadosProfessor.status)
     response.json(dadosProfessor)
 });
->>>>>>> b9f1f6b2a9d1584e04a89cc6d49dc424383e4c89
 
 
 
-
-
-
-
-
-
-
-app.listen(8080, function() {
+app.listen(8080, function () {
     console.log('Servidor aguardando requisição na porta 8080')
 })

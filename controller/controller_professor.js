@@ -2,7 +2,7 @@
  * Objetivo: Responsavel pela regra de negocio referente ao CRUD de PROFESSORES  
  * (GET, POST, PUT, DELETE)
  * Data: 19/05/2023
- * Autor: Mateus Alves da Silva
+ * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************/
 

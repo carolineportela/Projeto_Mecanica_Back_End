@@ -98,7 +98,7 @@ const selectCriterioByID = async function (id) {
         return false;
     }
 }
-
+////////
 
 module.exports = {
     insertTipoCriterio,

@@ -40,6 +40,7 @@ var controllerTipoUsuario = require('./controller/controller_tipoUsuario.js');
 var controllerCurso = require('./controller/controller_curso.js')
 var controllerTipoCriterio = require('./controller/controller_tipoCriterio.js');
 var controllerTipoTarefa = require('./controller/controller_tipoTarefa.js');
+var controllerMateria = require('./controller/controller_materia.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -526,3 +527,92 @@ app.put('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (reque
 }
 
 });
+
+
+/********************************
+* Objetivo : API de controle de Materia
+* Data : 27/05/2023
+********************************/
+
+//EndPoint: Post - Insere uma nova materia
+app.post('/v1/mecanica/materia', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosMateria = await controllerMateria.inserirMateria(dadosBody);
+
+        response.status(resultDadosMateria.status)
+        response.json(resultDadosMateria)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza a materia pelo id
+app.put('/v1/mecanica/materia/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+   if (String(contentType).toLowerCase() == 'application/json') {
+
+   let idCurso = request.params.id;
+
+   let dadosBody = request.body;
+
+   //Encaminha os dados para a controller
+   let resultDadosMateria = await controllerMateria.atualizarMateria(dadosBody, idCurso);
+
+   response.status(resultDadosMateria.status)
+   response.json(resultDadosMateria)
+
+} else {
+   response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+   response.json(message.ERROR_INVALID_CONTENT_TYPE)
+}
+
+});
+
+//EndPoint: Exclui uma materia existente, filtrando pelo ID
+app.delete('/v1/mecanica/materia/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idMateria = request.params.id;
+
+    //Recebe os dados da materia encaminhado no corpo da requisição 
+    let resultDadosMateria = await controllerMateria.deletarMateria(idMateria)
+
+    if (resultDadosMateria) {
+       response.json(resultDadosMateria);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+//EndPoint: Retorna todas materias
+app.get('/v1/mecanica/materias', cors(), bodyParserJSON, async function (request, response) {
+ 
+    //Recebe os dados da controller da materia
+    let dadosMateria = await controllerMateria.getMaterias()
+
+    response.status(dadosMateria.status)
+    response.json(dadosMateria)
+});
+
+//EndPoint: Retorna a materia pelo id
+app.get('/v1/mecanica/materia/id/:id', cors(), bodyParserJSON, async function(request, response) {
+
+   let id = request.params.id
+
+   let dadosMateria = await controllerMateria.getMateriaPorId(id)
+
+   response.status(dadosMateria.status)
+   response.json(dadosMateria)
+})

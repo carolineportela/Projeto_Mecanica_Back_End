@@ -10,7 +10,6 @@ var {PrismaClient} = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
-////////////////////////Inserts//////////////////////////
 const insertCurso = async function(dadosCurso) {
     let sql = `insert into tbl_curso (
         nome,
@@ -26,6 +25,7 @@ const insertCurso = async function(dadosCurso) {
        
     //Executa o scrip sql no banco de dados        
     let resultStatus = await prisma.$executeRawUnsafe(sql);
+
     if (resultStatus) {
         return true;
     } else {
@@ -33,7 +33,6 @@ const insertCurso = async function(dadosCurso) {
     }
 
 }
-
 
 //////////////////////Deletes///////////////////////////
 const deleteCurso = async function(id) {
@@ -75,8 +74,8 @@ const selectAllCursos = async function() {
     
     let rsCurso = await prisma.$queryRawUnsafe(sql)
 
-    if (rsAluno.length > 0) {
-        return rsAluno;
+    if (rsCurso.length > 0) {
+        return rsCurso;
     }
     else {
         return false;
@@ -101,17 +100,15 @@ const selectCursoByID = async function (id) {
 
     let sql = `select * from tbl_curso where id = ${idCurso}`;
 
-    let rsCursoId = await prisma.$queryRawUnsafe(sql);
+    let rsCurso = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCursoId.length > 0) {
-        return rsCursoId;
+    if (rsCurso) {
+        return rsCurso;
     }
     else {
         return false;
     }
 }
-
-
 
 module.exports = {
     insertCurso,

@@ -69,9 +69,41 @@ const selectAllMaterias = async function() {
         return false
 }
 
+const selectLastId = async function () {
+    let sql = `select * from tbl_materia order by id desc limit 1;`
+
+    let rsMateria = await prisma.$queryRawUnsafe(sql)
+
+    if (rsMateria.length > 0)
+        return rsMateria
+    else
+        return false
+}
+
+const selectMateriaByID = async function (id) {
+    let idMateria = id
+
+    let sql = `select * from tbl_materia where id = ${idMateria}`;
+
+    let rsMateriaId = await prisma.$queryRawUnsafe(sql);
+
+    if (rsMateriaId.length > 0) {
+        return rsMateriaId;
+    }
+    else {
+        return false;
+    }
+}
+
+
+
+
+
 module.exports = {
     insertMateria,
     updateMateria,
     deleteMateria,
-    selectAllMaterias
+    selectAllMaterias,
+    selectLastId,
+    selectMateriaByID
 }

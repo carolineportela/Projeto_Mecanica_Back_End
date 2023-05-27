@@ -111,7 +111,6 @@ const getCursos = async function () {
     }
 }
 
-
 module.exports = {
     inserirCurso,
     atualizarCurso,

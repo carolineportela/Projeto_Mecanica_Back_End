@@ -75,9 +75,36 @@ const selectAllTurmas = async function() {
         return false
 }
 
+const selectLastId = async function() {
+    let sql = `select * from tbl_turma order by id desc limit 1;`
+
+    let rsTurma = await prisma.$queryRawUnsafe(sql)
+
+    if(rsTurma.length > 0)
+        return rsTurma
+    else
+        return false
+}
+
+const selectTurmaByID = async function(id) {
+
+    let sql = `select * from tbl_turma where id = ${id}`;
+
+    let rsTurmaId = await prisma.$queryRawUnsafe(sql);
+
+    if (rsTurmaId.length > 0) {
+        return rsTurmaId;
+    }
+    else {
+        return false;
+    }
+}
+
 module.exports = {
     insertTurma,
     deleteTurma,
     updateTurma,
-    selectAllTurmas
+    selectAllTurmas,
+    selectLastId,
+    selectTurmaByID
 }

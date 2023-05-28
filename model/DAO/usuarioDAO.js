@@ -93,6 +93,31 @@ const selectUsuarioByType = async function(tipoUsuario) {
     else
         return false
 }
+const selectLastId = async function() {
+    let sql = `select * from tbl_usuario order by id desc limit 1;`
+
+    let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+    if(rsAluno.length > 0)
+        return rsAluno
+    else
+        return false
+}
+
+///////////////////////Selects//////////////////////////
+const selectAllUsuarios = async function() {
+    let sql = `select * from tbl_usuario`
+    
+    let rsUsuario = await prisma.$queryRawUnsafe(sql)
+
+    if (rsUsuario.length > 0) {
+        return rsUsuario;
+    }
+    else {
+        return false;
+    }
+}
+
 
 module.exports = {
   insertUsuario,
@@ -100,5 +125,7 @@ module.exports = {
   updateUsuario,
   selectUsuarioByID,
   selectUsuarioByEmail,
-  selectUsuarioByType
+  selectUsuarioByType,
+  selectLastId,
+  selectAllUsuarios
 }

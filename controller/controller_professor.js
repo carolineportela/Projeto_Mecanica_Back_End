@@ -20,8 +20,8 @@ const inserirProfessor = async function (dadosProfessor) {
     if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 150 ||
         dadosProfessor.data_nascimento == '' || dadosProfessor.data_nascimento == undefined ||
         dadosProfessor.email == '' || dadosProfessor.email == undefined ||
-        dadosProfessor.idMateria == '' || dadosProfessor.idMateria == undefined ||
-        dadosProfessor.idUsuario == '' || dadosProfessor.idUsuario == undefined
+        dadosProfessor.id_materia == '' || dadosProfessor.id_materia == undefined ||
+        dadosProfessor.id_usuario == '' || dadosProfessor.id_usuario == undefined
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
@@ -71,8 +71,8 @@ const atualizarProfessor = async function (dadosProfessor, idProfessor) {
     if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 150 ||
         dadosProfessor.data_nascimento == '' || dadosProfessor.data_nascimento == undefined ||
         dadosProfessor.email == '' || dadosProfessor.email == undefined ||
-        dadosProfessor.idMateria == '' || dadosProfessor.idMateria == undefined ||
-        dadosProfessor.idUsuario == '' || dadosProfessor.idUsuario == undefined
+        dadosProfessor.id_materia == '' || dadosProfessor.id_materia == undefined ||
+        dadosProfessor.id_usuario == '' || dadosProfessor.id_usuario == undefined
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else if (idProfessor == '' || idProfessor == undefined || idProfessor == isNaN(idProfessor)) {

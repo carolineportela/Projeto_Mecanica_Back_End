@@ -19,8 +19,8 @@ const inserirAluno = async function (dadosAluno) {
         dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined ||
         dadosAluno.cpf == '' || dadosAluno.cpf == undefined ||
         dadosAluno.matricula == '' || dadosAluno.matricula == undefined ||
-        dadosAluno.idTurma == '' || dadosAluno.idTurma == undefined ||
-        dadosAluno.idUsuario == '' || dadosAluno.idUsuario == undefined
+        dadosAluno.id_turma == '' || dadosAluno.id_turma == undefined ||
+        dadosAluno.id_usuario == '' || dadosAluno.id_usuario == undefined
 
     ) {
         return message.ERROR_REQUIRED_FIELDS
@@ -34,7 +34,7 @@ const inserirAluno = async function (dadosAluno) {
             let novoAluno = await alunoDAO.selectLastId()
 
             let dadosAlunosJSON = {}
-            dadosAlunosJSON.status = message.SUCCESS_CREATED_ITEM.status
+            dadosAlunosJSON.status = message.SUCESS_CREATED_ITEM.status
             dadosAlunosJSON.aluno = novoAluno
 
             return dadosAlunosJSON
@@ -53,8 +53,8 @@ const atualizarAluno = async function (dadosAluno, idAluno) {
         dadosAluno.data_nascimento == '' || dadosAluno.data_nascimento == undefined || dadosAluno.data_nascimento.length > 10 ||
         dadosAluno.cpf == '' || dadosAluno.cpf == undefined ||
         dadosAluno.matricula == '' || dadosAluno.matricula == undefined ||
-        dadosAluno.idTurma == '' || dadosAluno.idTurma == undefined ||
-        dadosAluno.idUsuario == '' || dadosAluno.idUsuario == undefined
+        dadosAluno.id_turma == '' || dadosAluno.id_turma == undefined ||
+        dadosAluno.id_usuario == '' || dadosAluno.id_usuario == undefined
     ) {
         return message.ERROR_REQUIRED_FIELDS
         //Validação de id incorreto ou não informado

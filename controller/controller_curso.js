@@ -1,3 +1,11 @@
+/***************************************************************************************************************************************************
+ * Objetivo: Responsavel pela regra de negocio referente ao CRUD de CURSOS  
+ * (GET, POST, PUT, DELETE)
+ * Data: 19/05/2023
+ * Autor: Caroline Portela
+ * Versão: 1.0
+ ***************************************************************************************************************************************************/
+
 //Import do arquivo de configuração das variaveis, constantes e funções globais
 var message = require('./modulo/config.js')
 var cursoDAO = require('../model/DAO/cursoDAO.js')
@@ -9,7 +17,8 @@ const inserirCurso = async function (dadosCurso) {
     if (dadosCurso.nome == '' || dadosCurso.nome == undefined || dadosCurso.nome.length > 150 ||
         dadosCurso.sigla == '' || dadosCurso.sigla == undefined || dadosCurso.sigla.length > 6 ||
         dadosCurso.descricao == '' || dadosCurso.descricao == undefined || dadosCurso.descricao.length > 300 ||
-        dadosCurso.carga_horaria == '' || dadosCurso.carga_horaria == undefined) {
+        dadosCurso.carga_horaria == '' || dadosCurso.carga_horaria == undefined)
+    {
         return message.ERROR_REQUIRED_FIELDS
     } else {
 
@@ -74,19 +83,19 @@ const deletarCurso = async function (idCurso) {
     if (statusId) {
 
         if (idCurso == '' || idCurso == undefined || isNaN(idCurso)) {
-            return message.ERROR_INVALID_ID;
+            return message.ERROR_INVALID_ID; 
         } else {
             let resultDadosCurso = await cursoDAO.deleteCurso(idCurso)
 
             if (resultDadosCurso) {
                 return message.SUCESS_DELETED_ITEM
             } else {
-                return message.ERROR_INTERNAL_SERVER
+                return message.ERROR_INTERNAL_SERVER 
             }
         }
 
     } else {
-        return message.ERROR_NOT_FOUND
+        return message.ERROR_NOT_FOUND 
     }
 }
 
@@ -111,14 +120,14 @@ const getCursos = async function () {
 
 const getCursoPorID = async function (id) {
 
-    if (id == '' || id == undefined || isNaN(id)) {
+    if(id == '' || id == undefined || isNaN(id)) {
         return message.ERROR_INVALID_ID
     } else {
         let dadosCursoJSON = {}
 
         let dadosCurso = await cursoDAO.selectCursoByID(id)
 
-        if (dadosCurso) {
+        if(dadosCurso) {
             dadosCursoJSON.status = message.SUCESS_REQUEST.status
             dadosCursoJSON.message = message.SUCESS_REQUEST.message
             dadosCursoJSON.curso = dadosCurso

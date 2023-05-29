@@ -11,7 +11,7 @@ var {PrismaClient} = require('@prisma/client')
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertUsuario = async function(dadosUsuario, idTipoUsuario) {
+const insertUsuario = async function(dadosUsuario) {
     let sql = `insert into tbl_usuario (
         email,
         senha,
@@ -19,7 +19,7 @@ const insertUsuario = async function(dadosUsuario, idTipoUsuario) {
     ) values (
         '${dadosUsuario.email}',
         '${dadosUsuario.senha}',
-        '${idTipoUsuario}',
+        ${dadosUsuario.id_tipo_usuario}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)

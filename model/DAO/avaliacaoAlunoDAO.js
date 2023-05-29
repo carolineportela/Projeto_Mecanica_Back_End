@@ -56,8 +56,21 @@ const selectAvaliacaoAlunoByID = async function(id) {
     }
 }
 
+const selectLastId = async function() {
+    let sql = `select * from tbl_avaliacao_aluno order by id desc limit 1;`
+
+    let rsAvaliacaoAluno = await prisma.$queryRawUnsafe(sql)
+
+    if(rsAvaliacaoAluno.length > 0)
+        return rsAvaliacaoAluno
+    else
+        return false
+}
+
+
 module.exports = {
     insertAvaliacaoAluno,
     selectAllAvaliacoesAlunos,
-    selectAvaliacaoAlunoByID
+    selectAvaliacaoAlunoByID,
+    selectLastId
 }

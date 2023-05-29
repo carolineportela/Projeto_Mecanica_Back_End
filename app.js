@@ -48,6 +48,8 @@ var controllerTarefa = require('./controller/controller_tarefa.js');
 var controllerCriterio = require('./controller/controller_criterio.js');
 var controllerSemestre =  require('./controller/controller_semestre.js');
 var controllerRegistroTempo =  require('./controller/controller_registro_tempo.js');
+var controllerAvaliacaoAluno =  require('./controller/controller_avaliacaoAluno.js');
+var controllerAvaliacaoProfessor =  require('./controller/controller_avaliacao_professor.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -114,7 +116,7 @@ app.post('/v1/mecanica/usuario', cors(), bodyParserJSON, async function (request
 app.get('/v1/mecanica/usuarios', cors(), async function (request, response) {
 
     //Recebe os dados da controller
-    let dados = await controllerUsuario.getUsuario;
+    let dados = await controllerUsuario.getUsuario()
 
     response.status(dados.status)
     response.json(dados)
@@ -1131,6 +1133,99 @@ app.delete('/v1/mecanica/registro/tempo/:id', cors(), bodyParserJSON, async func
        response.status(404);
    }
 });
+
+
+/////////////////////////////////////////Avaliacao Aluno//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Avaliacao Aluno
+* Data : 29/05/2023
+********************************/
+
+//EndPoint: Post - Insere uma nova avaliacao do aluno
+app.post('/v1/mecanica/avaliacao/aluno', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosAvaliacaoAluno = await controllerAvaliacaoAluno.inserirAvaliacaoAluno(dadosBody);
+
+        response.status(resultDadosAvaliacaoAluno.status)
+        response.json(resultDadosAvaliacaoAluno)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui uma avaliacao de aluno existente, filtrando pelo ID
+app.delete('/v1/mecanica/avaliacao/aluno:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idAvaliacaoAluno = request.params.id;
+
+    let resultDadosAvaliacaoAluno = await controllerAvaliacaoAluno.deletarAvaliacaoAluno(idAvaliacaoAluno)
+
+    if (resultDadosAvaliacaoAluno) {
+       response.json(resultDadosAvaliacaoAluno);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+
+/////////////////////////////////////////Avaliacao Professor//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Avaliacao Professor
+* Data : 29/05/2023
+********************************/
+
+//EndPoint: Post - Insere uma nova avaliacao do Professor
+app.post('/v1/mecanica/avaliacao/professor', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosAvaliacaoProfessor = await controllerAvaliacaoProfessor.inserirAvaliacaoProfessor(dadosBody);
+
+        response.status(resultDadosAvaliacaoProfessor.status)
+        response.json(resultDadosAvaliacaoProfessor)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui uma avaliacao do professor existente, filtrando pelo ID
+app.delete('/v1/mecanica/avaliacao/professor:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idAvaliacaoProfessor = request.params.id;
+
+    let resultDadosAvaliacaoProfessor = await controllerAvaliacaoProfessor.deletarAvaliacaoProfessor(idAvaliacaoProfessor)
+
+    if (resultDadosAvaliacaoProfessor) {
+       response.json(resultDadosAvaliacaoProfessor);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+
+
 
 
 

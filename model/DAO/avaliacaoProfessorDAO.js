@@ -5,7 +5,7 @@
  * Versão: 1.0
  ***************************************************************************************************************************************************/
 
-var {PrismaClient} = require('@prisma/client')
+var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
@@ -30,26 +30,45 @@ const insertAvaliacaoProfessor = async function (dadosAvaliacaoProfessor) {
 
 }
 
-const selectAllAvaliacoesProfessores = async function() {
+///////////////////////Updates//////////////////////////
+const updateAvaliacaoProfessor = async function (dadosAvaliacaoProfessor, idAvaliacaoProfessor) {
+    let sql = `update tbl_avaliacao_professor set
+         '${dadosAvaliacaoProfessor.resultado}',
+         '${dadosAvaliacaoProfessor.id_professor}',
+         '${dadosAvaliacaoProfessor.id_criterio}'
+                where id = ${dadosAvaliacaoProfessor.id}    
+            `
+
+    //Executa o scriptSQL no BD
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if (resultStatus)
+        return true
+    else
+        return false
+}
+
+
+const selectAllAvaliacoesProfessores = async function () {
 
     let sql = `select * from tbl_avaliacao_professor`
 
     let rsAvaliacao = await prisma.$queryRawUnsafe(sql)
 
-    if(rsAvaliacao.length > 0) {
+    if (rsAvaliacao.length > 0) {
         return rsAvaliacao
     } else {
         return false
     }
 }
 
-const selectAvaliacaoProfessorByID = async function(id) {
+const selectAvaliacaoProfessorByID = async function (id) {
 
     let sql = `select * from tbl_avaliacao_professor where id = ${id}`
 
     let rsAvaliacao = await prisma.$queryRawUnsafe(sql)
 
-    if(rsAvaliacao.length > 0) {
+    if (rsAvaliacao.length > 0) {
         return rsAvaliacao
     } else {
         return false
@@ -59,5 +78,6 @@ const selectAvaliacaoProfessorByID = async function(id) {
 module.exports = {
     insertAvaliacaoProfessor,
     selectAllAvaliacoesProfessores,
-    selectAvaliacaoProfessorByID
+    selectAvaliacaoProfessorByID,
+    updateAvaliacaoProfessor
 }

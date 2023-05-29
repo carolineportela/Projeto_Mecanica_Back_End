@@ -23,7 +23,7 @@ const inserirUsuario = async function (dadosUsuario) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
         //Envia os dados para a model inserir no banco de dados
-        let resultDadosUsuario = await usuarioDAO.insertUsuario(dadosUsuario, idTipoUsuario)
+        let resultDadosUsuario = await usuarioDAO.insertUsuario(dadosUsuario)
 
         //Valida se o banco de dados inseriu corretamente os dados
         if (resultDadosUsuario) {
@@ -109,10 +109,11 @@ const getUsuario = async function () {
     let dadosUsuario = await usuarioDAO.selectAllUsuarios();
 
     if (dadosUsuario) {
-        dadosUsuario.status = message.SUCESS_REQUEST.status
-        dadosUsuario.message = message.SUCESS_REQUEST.message
-        dadosUsuario.quantidade = dadosUsuario.length;
-        dadosUsuario.usuarios = dadosUsuario
+
+        dadosUsuariosJSON.status = message.SUCESS_REQUEST.status
+        dadosUsuariosJSON.message = message.SUCESS_REQUEST.message
+        dadosUsuariosJSON.quantidade = dadosUsuario.length;
+        dadosUsuariosJSON.usuarios = dadosUsuario
         return dadosUsuariosJSON
     } else {
         return message.ERROR_NOT_FOUND

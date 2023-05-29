@@ -46,26 +46,6 @@ const inserirProfessor = async function (dadosProfessor) {
 
 }
 
-const deletarProfessor = async function (idProfessor) {
-    let statusId = await professorDAO.selectProfessorById(idProfessor);
-
-    if (statusId) {
-        if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
-            return message.ERROR_INVALID_ID;
-        } else {
-            let resultDadosProfessor = await professorDAO.deleteProfessor(idProfessor)
-
-            if (resultDadosProfessor) {
-                return message.SUCESS_DELETED_ITEM
-            } else {
-                return message.ERROR_INTERNAL_SERVER
-            }
-        }
-    } else {
-        return message.ERROR_NOT_FOUND
-    }
-
-}
 
 const atualizarProfessor = async function (dadosProfessor, idProfessor) {
     if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 150 ||
@@ -104,6 +84,28 @@ const atualizarProfessor = async function (dadosProfessor, idProfessor) {
 
 
 }
+
+const deletarProfessor = async function (idProfessor) {
+    let statusId = await professorDAO.selectProfessorById(idProfessor);
+
+    if (statusId) {
+        if (idProfessor == '' || idProfessor == undefined || isNaN(idProfessor)) {
+            return message.ERROR_INVALID_ID;
+        } else {
+            let resultDadosProfessor = await professorDAO.deleteProfessor(idProfessor)
+
+            if (resultDadosProfessor) {
+                return message.SUCESS_DELETED_ITEM
+            } else {
+                return message.ERROR_INTERNAL_SERVER
+            }
+        }
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+
+}
+
 
 const getProfessorPorID = async function (idProfessor) {
 

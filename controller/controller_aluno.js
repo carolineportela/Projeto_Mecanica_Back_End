@@ -73,8 +73,8 @@ const atualizarAluno = async function (dadosAluno, idAluno) {
             if (resultDadosAluno) {
 
                 let dadosAlunosJSON = {}
-                dadosAlunosJSON.status = message.SUCCESS_UPDATED_ITEM.status
-                dadosAlunosJSON.message = message.SUCCESS_UPDATED_ITEM.message
+                dadosAlunosJSON.status = message.SUCESS_UPDATED_ITEM.status
+                dadosAlunosJSON.message = message.SUCESS_UPDATED_ITEM.message
                 dadosAlunosJSON.aluno = dadosAluno
                 return dadosAlunosJSON
             } else

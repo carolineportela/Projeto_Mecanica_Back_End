@@ -11,7 +11,7 @@ var {PrismaClient} = require('@prisma/client')
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertTarefa = async function(dadosTarefa, idMateria, idTipoTarefa) {
+const insertTarefa = async function(dadosTarefa) {
     let sql = `insert into tbl_tarefa (
         nome,
         numero,
@@ -22,8 +22,8 @@ const insertTarefa = async function(dadosTarefa, idMateria, idTipoTarefa) {
         '${dadosTarefa.nome}',
         '${dadosTarefa.numero}',
         '${dadosTarefa.tempo_previsto}',
-        '${idMateria}',
-        '${idTipoTarefa}'
+        '${dadosTarefa.id_materia}',
+        '${dadosTarefa.id_tipo_tarefa}'
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -47,14 +47,13 @@ const deleteTarefa = async function(id) {
 }
 
 ///////////////////////Updates//////////////////////////
-const updateTarefa = async function(id) {
+const updateTarefa = async function(dadosTarefa) {
      let sql = `update tbl_tarefa set
-                    nome = '${dadosAluno.nome}',
-                    data_nascimento = '${dadosAluno.data_nascimento}',
-                    cpf = '${dadosAluno.cpf}',
-                    matricula = '${dadosAluno.matricula}',
-                    id_turma = '${idTurma}',
-                    id_usuario = '${idUsuario}'
+                    nome = '${dadosTarefa.nome}',
+                    numero = '${dadosTarefa.numero}',
+                    tempo_previsto = '${dadosTarefa.tempo_previsto}',
+                    id_materia = '${dadosTarefa.id_materia}',
+                    id_tipo_tarefa = '${dadosTarefa.id_tipo_tarefa}'
                 where id = ${dadosAluno.id}    
             `
 
@@ -79,9 +78,37 @@ const selectAllTarefas = async function() {
         return false
 }
 
+const selectTarefaByID = async function(id) {
+
+    let sql = `select * from tbl_tarefa where id = ${id}`;
+
+    let rsTarefaId = await prisma.$queryRawUnsafe(sql);
+
+    if (rsTarefaId.length > 0) {
+        return rsTarefaId;
+    }
+    else {
+        return false;
+    }
+}
+
+const selectLastId = async function () {
+    let sql = `select * from tbl_tarefa order by id desc limit 1;`
+
+    let rsAluno = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAluno.length > 0) {
+        return rsAluno
+    } else {
+        return false;
+    }
+}
+
 module.exports = {
     insertTarefa,
     deleteTarefa,
     updateTarefa,
-    selectAllTarefas
+    selectAllTarefas,
+    selectTarefaByID,
+    selectLastId
 }

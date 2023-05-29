@@ -12,28 +12,43 @@ var message = require('./modulo/config.js')
 var turmaDAO = require('../model/DAO/turmaDAO.js')
 const { request } = require('express')
 
-const inserirTurma = async function (dadosTurma, idCurso) {
+const inserirTurma = async function (dadosTurma) {
+
     if (dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome > 150 ||
         dadosTurma.sigla == '' || dadosTurma.sigla == undefined || dadosTurma.sigla > 5 ||
         dadosTurma.id_curso == '' || dadosTurma.id_curso == undefined || isNaN(dadosTurma.id_curso)
     ) {
+
         return message.ERROR_REQUIRED_FIELDS
+
     } else {
 
-        let resultDadosTurma = await turmaDAO.insertTurma(dadosTurma)
+        let verificacaoCurso = await cursoDAO.selectCursoByID(dadosTurma.id_curso)
 
-        if (resultDadosTurma) {
+        if (verificacaoCurso == false) {
 
-            let novaTurma = await turmaDAO.selectLastId()
+            return message.ERROR_INVALID_ID
 
-            let dadosTurmaJSON = {}
-
-            dadosTurmaJSON.status = message.SUCESS_CREATED_ITEM.status
-            dadosTurmaJSON.turma = novaTurma
-
-            return dadosTurmaJSON
         } else {
-            return message.ERROR_INTERNAL_SERVER
+
+            let resultDadosTurma = await turmaDAO.insertTurma(dadosTurma)
+
+            if (resultDadosTurma) {
+
+                let novaTurma = await turmaDAO.selectLastId()
+
+                let dadosTurmaJSON = {}
+
+                dadosTurmaJSON.status = message.SUCESS_CREATED_ITEM.status
+                dadosTurmaJSON.message = message.SUCESS_CREATED_ITEM.message
+                dadosTurmaJSON.turma = novaTurma
+
+                return dadosTurmaJSON
+
+            } else {
+                return message.ERROR_INTERNAL_SERVER
+
+            }
         }
     }
 }

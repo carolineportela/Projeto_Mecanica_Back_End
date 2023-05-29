@@ -42,7 +42,12 @@ var controllerTipoCriterio = require('./controller/controller_tipoCriterio.js');
 var controllerTipoTarefa = require('./controller/controller_tipoTarefa.js');
 var controllerMateria = require('./controller/controller_materia.js');
 var controllerTurma = require('./controller/controller_turma.js');
+var controllerTurmaMateria = require('./controller/controller_turma_materia.js')
 var controllerUsuario = require('./controller/controller_usuario.js');
+var controllerTarefa = require('./controller/controller_tarefa.js');
+var controllerCriterio = require('./controller/controller_criterio.js');
+var controllerSemestre =  require('./controller/controller_semestre.js');
+var controllerRegistroTempo =  require('./controller/controller_registro_tempo.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -53,7 +58,7 @@ var controllerUsuario = require('./controller/controller_usuario.js');
 ********************************/
 
 
-//EndPoint: Post - Insere um tipo de usuario
+//EndPoint: Post - Insere um TIPO de usuario
 app.post('/v1/mecanica/tipo/usuario', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -761,6 +766,370 @@ app.put('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (reque
    response.json(message.ERROR_INVALID_CONTENT_TYPE)
 }
 
+});
+
+/////////////////////////////////////////Tarefa//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de  tarefas
+* Data : 27/05/2023
+********************************/
+
+
+//EndPoint: Post - Insere uma nova tarefa
+app.post('/v1/mecanica/tarefa', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosTarefa = await controllerTarefa.inserirTarefa(dadosBody);
+
+        response.status(resultDadosTarefa.status)
+        response.json(resultDadosTarefa)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza tarefa por id
+app.put('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idTarefa= request.params.id;
+   
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDadosTarefa = await controllerTarefa.atualizarTarefa(dadosBody, idTarefa);
+
+        response.status(resultDadosTarefa.status)
+        response.json(resultDadosTarefa)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui uma tarefa existente, filtrando pelo ID
+app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idTarefa = request.params.id;
+
+    //Recebe os dados da tarefa encaminhado no corpo da requisição 
+    let resultDadosTarefa = await controllerTarefa.deletarTarefa(idTarefa)
+
+    if (resultDadosTarefa) {
+       response.json(resultDadosTarefa);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+//EndPoint: Retorna todas tarefas
+app.get('/v1/mecanica/tarefas', cors(), bodyParserJSON, async function (request, response) {
+ 
+     //Recebe os dados da controller do curso
+     let dadosCurso = await controllerCurso.getCursos()
+
+     response.status(dadosCurso.status)
+     response.json(dadosCurso)
+});
+
+//EndPoint: Retorna a tarefa por id
+app.get('/v1/mecanica/tarefa/id/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+
+    let dadosTarefa = await controllerTarefa.getTarefaPorID(id)
+
+    response.status(dadosTarefa.status)
+    response.json(dadosTarefa)
+})
+
+
+/////////////////////////////////////////Turma_Materia//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de turma_materia
+* Data : 27/05/2023
+********************************/
+
+//EndPoint: Post
+app.post('/v1/mecanica/turma/materia', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosTurmaMateria = await controllerTurmaMateria.inserirTurmaMateria(dadosBody);
+
+        response.status(resultDadosTurmaMateria.status)
+        response.json(resultDadosTurmaMateria)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza 
+app.put('/v1/mecanica/turma/materia/:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idTurmaMateria = request.params.id;
+
+        //Recebe os dados do curso encaminhado no corpo da requisição
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDadosTurmaMateria = await controllerTurmaMateria.atualizarTurmaMateria(dadosBody, idTurmaMateria);
+
+        response.status(resultDadosTurmaMateria.status)
+        response.json(resultDadosTurmaMateria)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+/////////////////////////////////////////Criterio//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Criterio
+* Data : 29/05/2023
+********************************/
+
+//EndPoint: Post - Insere um novo criterio
+app.post('/v1/mecanica/criterio', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosCriterio = await controllerCriterio.inserirCriterio(dadosBody);
+
+        response.status(resultDadosCriterio.status)
+        response.json(resultDadosCriterio)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza criterio pelo id
+app.put('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCriterio = request.params.id;
+
+        //Recebe os dados do curso encaminhado no corpo da requisição
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDadosCriterio = await controllerCriterio.atualizarCriterio(dadosBody, idCriterio);
+
+        response.status(resultDadosCriterio.status)
+        response.json(resultDadosCriterio)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui um criterioexistente, filtrando pelo ID
+app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idCriterio = request.params.id;
+
+    let resultDadosCriterio = await controllerCriterio.deletarCriterio(idCriterio)
+
+    if (resultDadosCriterio) {
+       response.json(resultDadosCriterio);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+//EndPoint: Retorna todos os criterios
+app.get('/v1/mecanica/criterios', cors(), bodyParserJSON, async function (request, response) {
+ 
+     //Recebe os dados da controller
+     let dadosCriterio = await controllerCriterio.getCriterio()
+
+     response.status(dadosCriterio.status)
+     response.json(dadosCriterio)
+});
+
+/////////////////////////////////////////Semestre//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Semestre
+* Data : 29/05/2023
+********************************/
+
+//EndPoint: Post - Insere um novo semestre
+app.post('/v1/mecanica/semestre', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosSemestre = await controllerSemestre.inserirSemestre(dadosBody);
+
+        response.status(resultDadosSemestre.status)
+        response.json(resultDadosSemestre)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza semestre pelo id
+app.put('/v1/mecanica/semestre/:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe o id pelo parametro
+        let idSemestre = request.params.id;
+
+        //Recebe os dados encaminhado no corpo da requisição
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDadosSemestre = await controllerSemestre.atualizarSemestre(dadosBody, idSemestre);
+
+        response.status(resultDadosSemestre.status)
+        response.json(resultDadosSemestre)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui um semestre existente, filtrando pelo ID
+app.delete('/v1/mecanica/semestre/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idSemestre = request.params.id;
+
+    //Recebe os dados do semestre encaminhado no corpo da requisição 
+    let resultDadosSemestre = await controllerSemestre.deletarSemestre(idSemestre)
+
+    if (resultDadosSemestre) {
+       response.json(resultDadosSemestre);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
+
+//EndPoint: Retorna todos os semestres
+app.get('/v1/mecanica/semestres', cors(), bodyParserJSON, async function (request, response) {
+ 
+     //Recebe os dados da controller do semestre
+     let dadosSemestre = await controllerSemestre.getSemestre()
+
+     response.status(dadosSemestre.status)
+     response.json(dadosSemestre)
+});
+
+//EndPoint: Retorna o semestre pelo id
+app.get('/v1/mecanica/semestre/id/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+
+    let dadosSemestre = await controllerSemestre.getSemestreId(id)
+
+    response.status(dadosSemestre.status)
+    response.json(dadosSemestre)
+})
+
+/////////////////////////////////////////Registro Tempo//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Registro Tempo
+* Data : 29/05/2023
+********************************/
+
+//EndPoint: Post - Insere um novo registro tempo
+app.post('/v1/mecanica/registro/tempo', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosRegistroTempo = await controllerRegistroTempo.inserirRegistroTempo(dadosBody);
+
+        response.status(resultDadosRegistroTempo.status)
+        response.json(resultDadosRegistroTempo)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: Exclui um registro de tempo existente, filtrando pelo ID
+app.delete('/v1/mecanica/registro/tempo/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idRegistroTempo = request.params.id;
+
+    let resultDadosRegistroTempo = await controllerRegistroTempo.deletarRegistroTempo(idRegistroTempo)
+
+    if (resultDadosRegistroTempo) {
+       response.json(resultDadosRegistroTempo);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
 });
 
 

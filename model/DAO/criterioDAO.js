@@ -7,7 +7,7 @@
 
 
 ////////////////////////Inserts//////////////////////////
-const insertCriterio = async function (dadosCriterio, idTipoCriterio, idTarefa) {
+const insertCriterio = async function (dadosCriterio) {
     let sql = `insert into tbl_criterio (
         descricao,
         resultado_desejado,
@@ -16,8 +16,8 @@ const insertCriterio = async function (dadosCriterio, idTipoCriterio, idTarefa) 
     ) values (
         '${dadosCriterio.descricao}',
         '${dadosCriterio.resultado_desejado}',
-        '${idTipoCriterio}',
-        '${idTarefa}'
+        '${dadosCriterio.id_tipo_criterio}',
+        '${dadosCriterio.id_tarefa}'
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -31,7 +31,7 @@ const insertCriterio = async function (dadosCriterio, idTipoCriterio, idTarefa) 
 }
 
 //////////////////////Deletes///////////////////////////
-const deleteCriterio = async function(id) {
+const deleteCriterio = async function (id) {
     let sql = `delete from tbl_criterio where id = ${id}`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -43,59 +43,54 @@ const deleteCriterio = async function(id) {
     }
 }
 
-
-const updateCriterio = async function(dadosAluno, idTurma, idUsuario) {
-    let sql = `insert into tbl_criterio (
-        descricao,
-        resultado_desejado,
-        id_tipo_criterio,
-        id_tarefa
-    ) values (
-        '${dadosCriterio.descricao}',
-        '${dadosCriterio.resultado_desejado}',
-        '${idTipoCriterio}',
-        '${idTarefa}'
-    )`
+const updateCriterio = async function (dadosCriterio) {
+    let sql = `update tbl_criterio set
+                    descricao = '${dadosCriterio.descricao}',
+                    resultado_desejado = '${dadosCriterio.resultado_desejado}',
+                    id_tipo_criterio = '${dadosCriterio.id_tipo_criterio}',
+                    id_tarefa = '${dadosCriterio.id_tarefa}'
+                where id = '${dadosCriterio.id}'        
+    `
 
     //Executa o scriptSQL no BD
     let resultStatus = await prisma.$executeRawUnsafe(sql)
-    
-    if(resultStatus)
+
+    if (resultStatus)
         return true
     else
         return false
 }
 
 ///////////////////////Selects//////////////////////////
-const selectAllCriterio = async function() {
+const selectAllCriterio = async function () {
     let sql = `select * from tbl_criterio`
-    
+
     let rsCriterio = await prisma.$queryRawUnsafe(sql)
 
-    if(rsCriterio.length > 0)
+    if (rsCriterio.length > 0)
         return rsCriterio
     else
         return false
 }
 
 ///////////////////////Selects Criterio ID//////////////////////////
-const selectCriterioByID = async function(id) {
+const selectCriterioByID = async function (id) {
     let sql = `select * from tbl_criterio where id = ${id}`
 
     let rsCriterio = await prisma.$queryRawUnsafe(sql)
 
-    if(rsCriterio.length > 0)
+    if (rsCriterio.length > 0)
         return rsCriterio
     else
         return false
 }
 
-const selectLastId = async function() {
+const selectLastId = async function () {
     let sql = `select * from tbl_criterio order by id desc limit 1;`
 
     let rsCriterio = await prisma.$queryRawUnsafe(sql)
 
-    if(rsCriterio.length > 0)
+    if (rsCriterio.length > 0)
         return rsCriterio
     else
         return false

@@ -11,7 +11,7 @@ var {PrismaClient} = require('@prisma/client')
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertUsuario = async function(dadosUsuario, idTipoUsuario) {
+const insertUsuario = async function(dadosUsuario) {
     let sql = `insert into tbl_usuario (
         email,
         senha,
@@ -19,7 +19,7 @@ const insertUsuario = async function(dadosUsuario, idTipoUsuario) {
     ) values (
         '${dadosUsuario.email}',
         '${dadosUsuario.senha}',
-        '${idTipoUsuario}',
+        ${dadosUsuario.id_tipo_usuario}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -43,11 +43,11 @@ const deleteUsuario = async function(id) {
 }
 
 ///////////////////////Updates//////////////////////////
-const updateUsuario = async function(dadosUsuario, idTipoUsuario) {
+const updateUsuario = async function(dadosUsuario) {
     let sql = `update tbl_usuario set
                     email = '${dadosUsuario.email}',
                     senha = '${dadosUsuario.senha}',
-                    tipo_usuario = '${idTipoUsuario}'
+                    id_tipo_usuario = '${dadosUsuario.id_tipo_usuario}'
                 where id = ${dadosUsuario.id}    
             `
 
@@ -93,6 +93,7 @@ const selectUsuarioByType = async function(tipoUsuario) {
     else
         return false
 }
+
 const selectLastId = async function() {
     let sql = `select * from tbl_usuario order by id desc limit 1;`
 
@@ -112,12 +113,10 @@ const selectAllUsuarios = async function() {
 
     if (rsUsuario.length > 0) {
         return rsUsuario;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 module.exports = {
   insertUsuario,

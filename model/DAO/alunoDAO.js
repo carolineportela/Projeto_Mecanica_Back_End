@@ -11,7 +11,7 @@ var { PrismaClient } = require('@prisma/client')
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertAluno = async function (dadosAluno, idTurma, idUsuario) {
+const insertAluno = async function (dadosAluno) {
     let sql = `insert into tbl_aluno (
         nome,
         data_nascimento,
@@ -24,8 +24,8 @@ const insertAluno = async function (dadosAluno, idTurma, idUsuario) {
         '${dadosAluno.data_nascimento}',
         '${dadosAluno.cpf}',
         '${dadosAluno.matricula}',
-        '${idTurma}',
-        '${idUsuario}'
+        '${dadosAluno.id_turma}',
+        '${dadosAluno.id_usuario}'
     )`
 
     //Executa o scrip sql no banco de dados        
@@ -105,7 +105,6 @@ const selectAlunoByID = async function (id) {
         return false;
     }
 }
-
 
 const selectByNameAluno = async function (name) {
 

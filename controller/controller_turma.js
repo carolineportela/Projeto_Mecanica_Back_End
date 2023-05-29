@@ -10,6 +10,7 @@
 var message = require('./modulo/config.js')
 
 var turmaDAO = require('../model/DAO/turmaDAO.js')
+var cursoDAO = require('../model/DAO/cursoDAO.js')
 const { request } = require('express')
 
 const inserirTurma = async function (dadosTurma) {
@@ -53,30 +54,30 @@ const inserirTurma = async function (dadosTurma) {
     }
 }
 
-const atualizarTurma = async function (dadosTurma, id) {
+const atualizarTurma = async function (dadosTurma, idTurma) {
     if (dadosTurma.nome == '' || dadosTurma.nome == undefined || dadosTurma.nome > 150 ||
         dadosTurma.sigla == '' || dadosTurma.sigla == undefined || dadosTurma.sigla > 5 ||
         dadosTurma.id_curso == '' || dadosTurma.id_curso == undefined || isNaN(dadosTurma.id_curso)
     ) {
         return message.ERROR_REQUIRED_FIELDS
         //Validação de id incorreto ou não informado
-    } else if (id == '' || id == undefined || id == isNaN(id)) {
+    } else if (idTurma == '' || idTurma == undefined || isNaN(idTurma)) {
         return message.ERROR_INVALID_ID
     } else {
         //Adiciona o id da turma no JSON dos dados
-        dadosTurma.id = id;
+        dadosTurma.id = idTurma;
 
         let statusId = await turmaDAO.selectLastId()
 
         if (statusId) {
             //Encaminha os dados para a model 
-            let resultDadosTurma = await turmaDAO.updateTurma(dadosTurma, id)
+            let resultDadosTurma = await turmaDAO.updateTurma(dadosTurma)
 
             if (resultDadosTurma) {
 
                 let dadosTurmaJSON = {}
-                dadosTurmaJSON.status = message.SUCCESS_UPDATED_ITEM.status
-                dadosTurmaJSON.message = message.SUCCESS_UPDATED_ITEM.message
+                dadosTurmaJSON.status = message.SUCESS_UPDATED_ITEM.status
+                dadosTurmaJSON.message = message.SUCESS_UPDATED_ITEM.message
                 dadosTurmaJSON.turma = dadosTurma
                 return dadosTurmaJSON
             } else
@@ -117,7 +118,7 @@ const getTurmas = async function () {
     if (dadosTurma) {
         dadosTurmaJSON.status = message.SUCESS_REQUEST.status
         dadosTurmaJSON.message = message.SUCESS_REQUEST.message
-        dadosTurmaJSON.quantidade = dadosAluno.length;
+        dadosTurmaJSON.quantidade = dadosTurma.length;
         dadosTurmaJSON.turmas = dadosTurma
         return dadosTurmaJSON
     } else {

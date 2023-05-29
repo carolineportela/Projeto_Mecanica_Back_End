@@ -114,7 +114,7 @@ app.post('/v1/mecanica/usuario', cors(), bodyParserJSON, async function (request
 app.get('/v1/mecanica/usuarios', cors(), async function (request, response) {
 
     //Recebe os dados da controller
-    let dados = await controllerUsuario.getUsuario;
+    let dados = await controllerUsuario.getUsuario();
 
     response.status(dados.status)
     response.json(dados)
@@ -136,7 +136,6 @@ app.delete('/v1/mecanica/usuario/:id', cors(), bodyParserJSON, async function (r
        response.status(404);
    }
 });
-
 
 //EndPoint: Atualiza usuario pelo id
 app.put('/v1/mecanica/usuario/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -283,7 +282,6 @@ app.post('/v1/mecanica/turma', cors(), bodyParserJSON, async function (request, 
     }
 
 });
-
 
 //EndPoint: Put -  Atualiza turma pelo id
 app.put('/v1/mecanica/turma/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -550,20 +548,18 @@ app.post('/v1/mecanica/professor', cors(), bodyParserJSON, async function (reque
     }
 });
 
-//EndPoint: Delete - EXCLUI um professor existente filtrado pelo ID.
-app.delete('/v1/mecanica/professor/:id', cors(), async function (request, response) {
+//EndPoint: Delete - EXCLUIR um professor existente filtrado pelo ID.
+app.delete('/v1/mecanica/professor/:id', cors(), bodyParserJSON, async function (request, response) {
     let idProfessor = request.params.id
-
-    let controllerProfessor = require('./controller/controller_professor.js')
 
     let resultDadosProfessor = await controllerProfessor.deletarProfessor(idProfessor)
 
     if (resultDadosProfessor) {
         response.json(resultDadosProfessor)
-        response.status(message.SUCESS_DELETED_ITEM.status)
+        response.status(200)
     } else {
         response.json()
-        response.status(message.ERROR_NOT_FOUND.status)
+        response.status(404)
     }
 });
 
@@ -643,7 +639,7 @@ app.get('/v1/mecanica/tipos/criterios', cors(), async function (request, respons
 });
 
 //EndPoint: Exclui um tipo de criterio existente, filtrando pelo ID
-app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/tipos/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idCriterio = request.params.id;
 
@@ -660,7 +656,7 @@ app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (
 });
 
 //EndPoint: Atualiza um tipo de criterio pelo id
-app.put('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/mecanica/tipos/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
     //recebe o content-type da requisicao
     let contentType = request.headers['content-type'];
 
@@ -843,7 +839,7 @@ app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (re
 app.get('/v1/mecanica/tarefas', cors(), bodyParserJSON, async function (request, response) {
  
      //Recebe os dados da controller do curso
-     let dadosCurso = await controllerCurso.getCursos()
+     let dadosCurso = await controllerCurso.getTarefas()
 
      response.status(dadosCurso.status)
      response.json(dadosCurso)

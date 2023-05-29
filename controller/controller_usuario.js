@@ -17,13 +17,13 @@ const { request } = require('express')
 const inserirUsuario = async function (dadosUsuario) {
     if (dadosUsuario.email == '' || dadosUsuario.email == undefined || dadosUsuario.email.length > 100 ||
         dadosUsuario.senha == '' || dadosUsuario.senha == undefined ||
-        dadosUsuario.id_tipo_usuario == '' || dadosUsuario.id_tipo_usuario == undefined
+        dadosUsuario.id_tipo_usuario == '' || dadosUsuario.id_tipo_usuario == undefined || isNaN(dadosTurma.id_tipo_usuario)
 
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
         //Envia os dados para a model inserir no banco de dados
-        let resultDadosUsuario = await usuarioDAO.insertUsuario(dadosUsuario, idTipoUsuario)
+        let resultDadosUsuario = await usuarioDAO.insertUsuario(dadosUsuario)
 
         //Valida se o banco de dados inseriu corretamente os dados
         if (resultDadosUsuario) {
@@ -53,13 +53,13 @@ const atualizarUsuario = async function (dadosUsuario, idUsuario) {
     ) {
         return message.ERROR_REQUIRED_FIELDS
         //Validação de id incorreto ou não informado
-    } else if (idUsuario == '' || idUsuario == undefined || idUsuario == isNaN(idUsuario)) {
+    } else if (idUsuario == '' || idUsuario == undefined || isNaN(idUsuario)) {
         return message.ERROR_INVALID_ID
     } else {
 
         dadosUsuario.id = idUsuario;
 
-        let statusId = await usuarioDAO.selectUsuarioByID(id);
+        let statusId = await usuarioDAO.selectUsuarioByID(idUsuario);
 
         if (statusId) {
             //Encaminha os dados para a model do aluno
@@ -71,7 +71,7 @@ const atualizarUsuario = async function (dadosUsuario, idUsuario) {
                 dadosUsuarioJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosUsuarioJSON.message = message.SUCESS_UPDATED_ITEM.message
                 dadosUsuarioJSON.usuario = dadosUsuario
-                return dadosAlunosJSON
+                return dadosUsuarioJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
 
@@ -109,10 +109,10 @@ const getUsuario = async function () {
     let dadosUsuario = await usuarioDAO.selectAllUsuarios();
 
     if (dadosUsuario) {
-        dadosUsuario.status = message.SUCESS_REQUEST.status
-        dadosUsuario.message = message.SUCESS_REQUEST.message
-        dadosUsuario.quantidade = dadosUsuario.length;
-        dadosUsuario.usuarios = dadosUsuario
+        dadosUsuariosJSON.status = message.SUCESS_REQUEST.status
+        dadosUsuariosJSON.message = message.SUCESS_REQUEST.message
+        dadosUsuariosJSON.quantidade = dadosUsuario.length;
+        dadosUsuariosJSON.usuarios = dadosUsuario
         return dadosUsuariosJSON
     } else {
         return message.ERROR_NOT_FOUND
@@ -120,11 +120,9 @@ const getUsuario = async function () {
 
 }
 
-
-
 module.exports = {
     inserirUsuario,
     atualizarUsuario,
     deletarUsuario,
-     getUsuario
+    getUsuario
 }

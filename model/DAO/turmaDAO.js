@@ -11,7 +11,7 @@ var {PrismaClient} = require('@prisma/client')
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertTurma = async function (dadosTurma, idCurso) {
+const insertTurma = async function (dadosTurma) {
 
     let sql = `insert into tbl_turma (
         nome,
@@ -20,7 +20,7 @@ const insertTurma = async function (dadosTurma, idCurso) {
     ) values (
         '${dadosTurma.nome}',
         '${dadosTurma.sigla}',
-        '${idCurso}'
+        ${dadosTurma.id_curso}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -49,7 +49,7 @@ const updateTurma = async function(dadosTurma, idCurso) {
     let sql = `update tbl_turma set
                     nome = '${dadosTurma.nome}',
                     sigla = '${dadosTurma.sigla}',
-                    id_curso = '${idCurso}'
+                    id_curso = '${dadosTurma.id_curso}'
                 where id = ${dadosTurma.id}    
             `
 
@@ -67,7 +67,7 @@ const updateTurma = async function(dadosTurma, idCurso) {
 const selectAllTurmas = async function() {
     let sql = `select * from tbl_turma`
 
-    let rsTurma = await prisma.$queyRawUnsafe(sql)
+    let rsTurma = await prisma.$queryRawUnsafe(sql)
 
     if(rsTurma.length > 0)
         return rsTurma

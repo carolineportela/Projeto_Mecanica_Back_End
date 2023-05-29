@@ -21,7 +21,6 @@ const inserirAluno = async function (dadosAluno) {
         dadosAluno.matricula == '' || dadosAluno.matricula == undefined ||
         dadosAluno.id_turma == '' || dadosAluno.id_turma == undefined ||
         dadosAluno.id_usuario == '' || dadosAluno.id_usuario == undefined
-
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
@@ -155,7 +154,7 @@ const getAlunoPorID = async function (idAluno) {
 
         if (dadosAluno) {
             //Criadno um JSON com o atributo alunos,para encaminhar um array de alunos
-            dadosAlunosJSON.status = message.SUCESS_REQUEST.message
+            dadosAlunosJSON.status = message.SUCESS_REQUEST.status
             dadosAlunosJSON.message = message.SUCESS_REQUEST.message
             dadosAlunosJSON.alunos = dadosAluno
             return dadosAlunosJSON

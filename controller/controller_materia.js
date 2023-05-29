@@ -58,7 +58,7 @@ const atualizarMateria = async function (dadosMateria, idMateria) {
 
                 dadosMateriaJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosMateriaJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosMateriaJSON.cursos = dadosCurso
+                dadosMateriaJSON.materia = dadosMateria
                 return dadosMateriaJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
@@ -101,7 +101,7 @@ const getMaterias = async function () {
         materiasJSON.status = message.SUCESS_REQUEST.status
         materiasJSON.message = message.SUCESS_REQUEST.message
         materiasJSON.quantidade = materias.length;
-        materiasJSON.materia = cursos
+        materiasJSON.materia = materias
 
         return  materiasJSON
     } else {

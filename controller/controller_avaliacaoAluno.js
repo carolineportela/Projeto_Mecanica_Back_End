@@ -66,7 +66,47 @@ const deletarAvaliacaoAluno = async function (idAvaliacaoAluno) {
         return message.ERROR_NOT_FOUND 
     }
 }
+
+const getAvaliacaoAluno = async function () {
+    let avaliacaoAlunoJSON = {}
+
+    let avaliacoes = await avaliacaoAlunoDAO.selectAllAvaliacoesAlunos()
+
+    if (avaliacoes) {
+
+        avaliacaoAlunoJSON.status = message.SUCESS_REQUEST.status
+        avaliacaoAlunoJSON.message = message.SUCESS_REQUEST.message
+        avaliacaoAlunoJSON.quantidade = materias.length;
+        avaliacaoAlunoJSON.avaliacao = avaliacoes
+
+        return avaliacaoAlunoJSON
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+}
+
+const getAvaliacaoAlunoPorId = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosAvaliacaoAlunoJSON = {}
+
+        let dadosAvaliacaoAluno = await avaliacaoAlunoDAO.selectAvaliacaoAlunoByID(id)
+
+        if (dadosAvaliacaoAluno) {
+            dadosAvaliacaoAlunoJSON.status = message.SUCESS_REQUEST.status
+            dadosAvaliacaoAlunoJSON.message = message.SUCESS_REQUEST.message
+            dadosAvaliacaoAlunoJSON.avaliacao = dadosAvaliacaoAluno
+            return dadosAvaliacaoAlunoJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
 module.exports = {
     inserirAvaliacaoAluno,
-    deletarAvaliacaoAluno
+    deletarAvaliacaoAluno,
+    getAvaliacaoAlunoPorId,
+    getAvaliacaoAluno
 }

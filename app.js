@@ -50,6 +50,7 @@ var controllerSemestre =  require('./controller/controller_semestre.js');
 var controllerRegistroTempo =  require('./controller/controller_registro_tempo.js');
 var controllerAvaliacaoAluno =  require('./controller/controller_avaliacaoAluno.js');
 var controllerAvaliacaoProfessor =  require('./controller/controller_avaliacao_professor.js');
+var controllerResultadoObtido =  require('./controller/controller_resultado_obtido.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -1180,6 +1181,29 @@ app.delete('/v1/mecanica/avaliacao/aluno:id', cors(), bodyParserJSON, async func
 });
 
 
+//EndPoint: Retorna todas as avaliacoes aluno
+app.get('/v1/mecanica/avaliacao/aluno', cors(), bodyParserJSON, async function (request, response) {
+ 
+    //Recebe os dados da controller 
+    let dadosAvaliacaoAluno = await controllerAvaliacaoAluno.getAvaliacaoAluno()
+
+    response.status(dadosAvaliacaoAluno.status)
+    response.json(dadosAvaliacaoAluno)
+});
+
+
+//EndPoint: Retorna a avaliacao aluno pelo id
+app.get('/v1/mecanica/avaliacao/aluno/id/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+
+    let dadosAvaliacaoAluno = await controllerAvaliacaoAluno.getAvaliacaoAlunoPorId(id)
+
+    response.status(dadosAvaliacaoAluno.status)
+    response.json(dadosAvaliacaoAluno)
+})
+
+
 /////////////////////////////////////////Avaliacao Professor//////////////////////////////////////////////
 
 /********************************
@@ -1208,6 +1232,31 @@ app.post('/v1/mecanica/avaliacao/professor', cors(), bodyParserJSON, async funct
 
 });
 
+//EndPoint: Atualiza a avaliacao professor pelo id
+app.put('/v1/mecanica/avaliacao/professor/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+   if (String(contentType).toLowerCase() == 'application/json') {
+
+   let idAvaliacaoProfessor = request.params.id;
+
+   let dadosBody = request.body;
+
+   //Encaminha os dados para a controller
+   let resultDadosAvaliacaoProfessor = await controllerAvaliacaoProfessor.atualizarAvaliacaoProfessor(dadosBody, idAvaliacaoProfessor);
+
+   response.status(resultDadosAvaliacaoProfessor.status)
+   response.json(resultDadosAvaliacaoProfessor)
+
+} else {
+   response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+   response.json(message.ERROR_INVALID_CONTENT_TYPE)
+}
+
+});
+
+
 //EndPoint: Exclui uma avaliacao do professor existente, filtrando pelo ID
 app.delete('/v1/mecanica/avaliacao/professor:id', cors(), bodyParserJSON, async function (request, response) {
     
@@ -1224,6 +1273,97 @@ app.delete('/v1/mecanica/avaliacao/professor:id', cors(), bodyParserJSON, async 
    }
 });
 
+//EndPoint: Retorna todas as avaliacoes professor
+app.get('/v1/mecanica/avaliacao/professor', cors(), bodyParserJSON, async function (request, response) {
+ 
+    //Recebe os dados da controller 
+    let dadosAvaliacaoProfessor = await controllerAvaliacaoProfessor.getAvaliacaoProfessor()
+
+    response.status(dadosAvaliacaoProfessor.status)
+    response.json(dadosAvaliacaoProfessor)
+});
+
+//EndPoint: Retorna a avaliacao professor pelo id
+app.get('/v1/mecanica/avaliacao/professor/id/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+
+    let dadosAvaliacaoProfessor = await controllerAvaliacaoProfessor.getAvaliacaoProfessorPorId(id)
+
+    response.status(dadosAvaliacaoProfessor.status)
+    response.json(dadosAvaliacaoProfessor)
+})
+
+
+/////////////////////////////////////////Resultado Obtido//////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Resultado Obtido
+* Data : 30/05/2023
+********************************/
+
+//EndPoint: Post - Insere um novo resultado
+app.post('/v1/mecanica/resultado', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosResultado = await controllerResultadoObtido.inserirResultadoObtido(dadosBody);
+
+        response.status(resultDadosResultado.status)
+        response.json(resultDadosResultado)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Atualiza resultado pelo id
+app.put('/v1/mecanica/resultado/:id', cors(), bodyParserJSON, async function (request, response) {
+         //reccebe o content-type da requisicao
+         let contentType = request.headers['content-type'];
+
+        //Validacao para receber dados apenas no formato JSON
+        if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idResultado = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerResultadoObtido.atualizarResultadoObtido(dadosBody, idResultado);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Exclui um resultado existente, filtrando pelo ID
+app.delete('/v1/mecanica/resultado/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idResultado = request.params.id;
+
+
+    let resultDadosResultado = await controllerResultadoObtido.deletarResultadoObtido(idResultado)
+
+    if (resultDadosResultado) {
+       response.json(resultDadosResultado);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
 
 
 

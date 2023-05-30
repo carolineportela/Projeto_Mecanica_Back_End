@@ -14,10 +14,9 @@ var avaliacaoProfessorDAO = require('../model/DAO/avaliacaoProfessorDAO.js')
 const { request } = require('express')
 
 const inserirAvaliacaoProfessor = async function (dadosAvaliacaoProfessor) {
-    if (dadosAvaliacaoProfessor.resultado == '' || dadosAvaliacaoProfessor.resultado == undefined ||
+    if (dadosAvaliacaoProfessor.resultado == '' || dadosAvaliacaoProfessor.resultado == undefined || dadosAvaliacaoProfessor.resultado > 1 ||
         dadosAvaliacaoProfessor.id_professor == '' || dadosAvaliacaoProfessor.id_professor == undefined ||
         dadosAvaliacaoProfessor.id_criterio == '' || dadosAvaliacaoProfessor.id_criterio == undefined
-
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
@@ -43,10 +42,9 @@ const inserirAvaliacaoProfessor = async function (dadosAvaliacaoProfessor) {
 
 }
 
-
 const atualizarAvaliacaoProfessor = async function (dadosAvaliacaoProfessor, idAvaliacaoProfessor) {
 
-    if (dadosAvaliacaoProfessor.resultado == '' || dadosAvaliacaoProfessor.resultado == undefined ||
+    if (dadosAvaliacaoProfessor.resultado == '' || dadosAvaliacaoProfessor.resultado == undefined || dadosAvaliacaoProfessor.resultado > 1 ||
         dadosAvaliacaoProfessor.id_professor == '' || dadosAvaliacaoProfessor.id_professor == undefined ||
         dadosAvaliacaoProfessor.id_criterio == '' || dadosAvaliacaoProfessor.id_criterio == undefined
     ) {
@@ -81,8 +79,6 @@ const atualizarAvaliacaoProfessor = async function (dadosAvaliacaoProfessor, idA
 
 }
 
-
-
 const deletarAvaliacaoProfessor = async function (idAvaliacaoProfessor) {
 
     let statusId = await avaliacaoProfessorDAO.selectAvaliacaoProfessorByID(idAvaliacaoProfessor);
@@ -90,23 +86,65 @@ const deletarAvaliacaoProfessor = async function (idAvaliacaoProfessor) {
     if (statusId) {
 
         if (idAvaliacaoProfessor == '' || idAvaliacaoProfessor == undefined || isNaN(idAvaliacaoProfessor)) {
-            return message.ERROR_INVALID_ID; 
+            return message.ERROR_INVALID_ID;
         } else {
             let resultDadosAvaliacaoProfessor = await avaliacaoProfessorDAO.deletarAvaliacaoProfessor(idAvaliacaoProfessor)
 
             if (resultDadosAvaliacaoProfessor) {
                 return message.SUCESS_DELETED_ITEM
             } else {
-                return message.ERROR_INTERNAL_SERVER 
+                return message.ERROR_INTERNAL_SERVER
             }
         }
 
     } else {
-        return message.ERROR_NOT_FOUND 
+        return message.ERROR_NOT_FOUND
     }
 }
+
+const getAvaliacaoProfessor = async function () {
+    let avaliacaoProfessorJSON = {}
+
+    let avaliacoes = await avaliacaoProfessorDAO.selectAllAvaliacoesProfessores()
+
+    if (avaliacoes) {
+
+        avaliacaoProfessorJSON.status = message.SUCESS_REQUEST.status
+        avaliacaoProfessorJSON.message = message.SUCESS_REQUEST.message
+        avaliacaoProfessorJSON.quantidade = materias.length;
+        avaliacaoProfessorJSON.avaliacao = avaliacoes
+
+        return avaliacaoProfessorJSON
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+}
+
+const getAvaliacaoProfessorPorId = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosAvaliacaoProfessorJSON = {}
+
+        let dadosAvaliacaoProfessor = await avaliacaoProfessorDAO.selectAvaliacaoProfessorByID(id)
+
+        if (dadosAvaliacaoProfessor) {
+            dadosAvaliacaoProfessorJSON.status = message.SUCESS_REQUEST.status
+            dadosAvaliacaoProfessorJSON.message = message.SUCESS_REQUEST.message
+            dadosAvaliacaoProfessorJSON.avaliacao = dadosAvaliacaoProfessor
+            return dadosAvaliacaoProfessorJSON 
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
+
 module.exports = {
     inserirAvaliacaoProfessor,
     deletarAvaliacaoProfessor,
-    atualizarAvaliacaoProfessor
+    atualizarAvaliacaoProfessor,
+    getAvaliacaoProfessor,
+    getAvaliacaoProfessorPorId
 }

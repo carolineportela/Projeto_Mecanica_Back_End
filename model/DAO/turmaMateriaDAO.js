@@ -5,11 +5,44 @@
  * Versão: 1.0
  ***************************************************************************************************************************************************/
 
-var {PrismaClient} = require('@prisma/client')
+var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
-const selectAllTurmasMaterias = async function() {
+
+const insertTurmaMateria = async function (dadosTurmaMateria) {
+    let sql = `insert into tbl_turma_materia (
+        id_turma,
+        id_materia
+    ) values (
+        '${dadosTurmaMateria.id_turma}',
+        '${dadosTurmaMateria.id_materia}',
+    )`
+    //Executa o scrip sql no banco de dados        
+    let resultStatus = await prisma.$executeRawUnsafe(sql);
+
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+const deleteTurmaMateria = async function(id) {
+    let idTurmaMateria = id;
+
+    let sql = `delete from tbl_turma_materia where id = ${idTurmaMateria}`
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const selectAllTurmasMaterias = async function () {
     let sql = `select * from tbl_turma_materia`
 
     let rsTurmaTarefaID = await prisma.$queryRawUnsafe(sql)
@@ -23,7 +56,7 @@ const selectAllTurmasMaterias = async function() {
 
 }
 
-const selectTurmaMateriaByID = async function(id) {
+const selectTurmaMateriaByID = async function (id) {
     let sql = `select * from tbl_turma_materia where id = ${id}`;
 
     let rsTurmaTarefaId = await prisma.$queryRawUnsafe(sql);
@@ -38,5 +71,7 @@ const selectTurmaMateriaByID = async function(id) {
 
 module.exports = {
     selectAllTurmasMaterias,
-    selectTurmaMateriaByID
+    selectTurmaMateriaByID,
+    insertTurmaMateria,
+    deleteTurmaMateria
 }

@@ -33,8 +33,8 @@ const inserirProfessor = async function (dadosProfessor) {
             let novoProfessor = await professorDAO.selectLastId()
 
             let dadosProfessorJSON = {}
-            dadosProfessorJSON.status = message.SUCESS_CREATED_ITEM.message
-            dadosProfessorJSON.professor = novoProfessor
+            dadosProfessorJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosProfessorJSON.professores = novoProfessor
 
             return dadosProfessorJSON
         }
@@ -45,7 +45,6 @@ const inserirProfessor = async function (dadosProfessor) {
     }
 
 }
-
 
 const atualizarProfessor = async function (dadosProfessor, idProfessor) {
     if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 150 ||

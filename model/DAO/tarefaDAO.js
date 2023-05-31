@@ -54,7 +54,7 @@ const updateTarefa = async function(dadosTarefa) {
                     tempo_previsto = '${dadosTarefa.tempo_previsto}',
                     id_materia = '${dadosTarefa.id_materia}',
                     id_tipo_tarefa = '${dadosTarefa.id_tipo_tarefa}'
-                where id = ${dadosAluno.id}    
+                where id = ${dadosTarefa.id}    
             `
 
     //Executa o scriptSQL no BD

@@ -51,6 +51,7 @@ var controllerRegistroTempo =  require('./controller/controller_registro_tempo.j
 var controllerAvaliacaoAluno =  require('./controller/controller_avaliacaoAluno.js');
 var controllerAvaliacaoProfessor =  require('./controller/controller_avaliacao_professor.js');
 var controllerResultadoObtido =  require('./controller/controller_resultado_obtido.js');
+var controllerTurmaMateria = require('./controller/controller_turma_materia.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -175,6 +176,7 @@ app.put('/v1/mecanica/usuario/:id', cors(), bodyParserJSON, async function (requ
 ********************************/
 
 //EndPoint: Post - Insere um novo curso
+
 app.post('/v1/mecanica/curso', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -553,20 +555,18 @@ app.post('/v1/mecanica/professor', cors(), bodyParserJSON, async function (reque
     }
 });
 
-//EndPoint: Delete - EXCLUI um professor existente filtrado pelo ID.
-app.delete('/v1/mecanica/professor/:id', cors(), async function (request, response) {
+//EndPoint: Delete - EXCLUIR um professor existente filtrado pelo ID.
+app.delete('/v1/mecanica/professor/:id', cors(), bodyParserJSON, async function (request, response) {
     let idProfessor = request.params.id
-
-    let controllerProfessor = require('./controller/controller_professor.js')
 
     let resultDadosProfessor = await controllerProfessor.deletarProfessor(idProfessor)
 
     if (resultDadosProfessor) {
         response.json(resultDadosProfessor)
-        response.status(message.SUCESS_DELETED_ITEM.status)
+        response.status(200)
     } else {
         response.json()
-        response.status(message.ERROR_NOT_FOUND.status)
+        response.status(404)
     }
 });
 
@@ -609,7 +609,6 @@ app.get('/v1/mecanica/professor', cors(), async function (request, response) {
     response.json(dadosProfessor)
 });
 
-
 /********************************
 * Objetivo : API de controle de tipo criterio
 * Data : 27/05/2023
@@ -646,7 +645,7 @@ app.get('/v1/mecanica/tipos/criterios', cors(), async function (request, respons
 });
 
 //EndPoint: Exclui um tipo de criterio existente, filtrando pelo ID
-app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/tipo/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idCriterio = request.params.id;
 
@@ -661,6 +660,7 @@ app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (
        response.status(404);
    }
 });
+
 
 //EndPoint: Atualiza um tipo de criterio pelo id
 app.put('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -729,7 +729,7 @@ app.get('/v1/mecanica/tipos/tarefas', cors(), async function (request, response)
 });
 
 //EndPoint: Exclui um tipo de tarefa existente, filtrando pelo ID
-app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/tipo/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idTipoTarefa = request.params.id;
     
@@ -745,7 +745,7 @@ app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (re
 });
 
 //EndPoint: Atualiza um tipo de tarefa pelo id
-app.put('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/mecanica/tipo/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
     //recebe o content-type da requisicao
     let contentType = request.headers['content-type'];
 
@@ -916,6 +916,22 @@ app.put('/v1/mecanica/turma/materia/:id', cors(), bodyParserJSON, async function
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
 
+});
+
+//EndPoint: Exclui 
+app.delete('/v1/mecanica/turma/materia/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idTurmaMateria = request.params.id;
+
+    let resultDadosTurmaMateria = await controllerTurmaMateria.deletarTurmaMateria(idTurmaMateria)
+
+    if (resultDadosTurmaMateria) {
+       response.json(resultDadosTurmaMateria);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
 });
 
 /////////////////////////////////////////Criterio//////////////////////////////////////////////

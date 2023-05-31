@@ -76,7 +76,7 @@ const atualizarTarefa = async function (dadosTarefa, idTarefa) {
 
                 dadosTarefaJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosTarefaJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosTarefaJSON.cursos = dadosCurso
+                dadosTarefaJSON.cursos = dadosTarefa
                 return dadosTarefaJSON
             } else
                 return message.ERROR_INTERNAL_SERVER

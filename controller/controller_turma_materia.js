@@ -7,7 +7,7 @@
 
 //Import do arquivo de configuração das variaveis, constantes e funções globais
 var message = require('./modulo/config.js')
-var turmaMateria = require('../model/DAO/turmaMateriaDAO.js')
+var turmaMateriaDAO = require('../model/DAO/turmaMateriaDAO.js')
 
 const { request } = require('express')
 
@@ -71,8 +71,51 @@ const atualizarTurmaMateria = async function (dadosTurmaMateria, idTurmaMateria)
 
 }
 
+const deletarTurmaMateria = async function (idTurmaMateria) {
+
+    let statusId = await turmaMateriaDAO.selectTurmaMateriaByID(idTurmaMateria);
+
+    if (statusId) {
+
+        if (idTurmaMateria == '' || idTurmaMateria == undefined || isNaN(idTurmaMateria)) {
+            return message.ERROR_INVALID_ID; 
+        } else {
+            let resultDadosTurmaMateria = await turmaMateriaDAO.deleteTurmaMateria(idTurmaMateria)
+
+            if (resultDadosTurmaMateria) {
+                return message.SUCESS_DELETED_ITEM
+            } else {
+                return message.ERROR_INTERNAL_SERVER 
+            }
+        }
+
+    } else {
+        return message.ERROR_NOT_FOUND 
+    }
+}
+
+const getTurmaMateria = async function () {
+    let turmaMateriaJSON = {}
+
+    let turmasMateria = await turmaMateriaDAO.selectAllTurmasMaterias()
+
+    if (turmasMateria) {
+
+        turmaMateriaJSON.status = message.SUCESS_REQUEST.status
+        turmaMateriaJSON.message = message.SUCESS_REQUEST.message
+        turmaMateriaJSON.quantidade = turmasMateria.length;
+        turmaMateriaJSON.turmaMateria = turmasMateria
+
+        return turmaMateriaJSON
+
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+}
 
 module.exports = {
     inserirTurmaMateria,
-    atualizarTurmaMateria
+    atualizarTurmaMateria,
+    deletarTurmaMateria,
+    getTurmaMateria
 }

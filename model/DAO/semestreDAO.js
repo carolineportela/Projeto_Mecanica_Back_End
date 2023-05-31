@@ -17,7 +17,7 @@ const insertSemestre = async function(dadosSemestre) {
         id_curso
     ) values (
         '${dadosSemestre.numero}',
-        '${dadosSemestre.id_curso}'
+        ${dadosSemestre.id_curso}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -44,7 +44,7 @@ const deleteSemestre = async function(id) {
 const updateSemestre = async function(dadosSemestre) {
     let sql = `update tbl_semestre set
                     numero = '${dadosSemestre.numero}',
-                    id_curso = '${dadosSemestre.id_curso}'
+                    id_curso = ${dadosSemestre.id_curso}
                 where id = ${dadosSemestre.id}
             `
     //Executa o scriptSQL no BD

@@ -17,7 +17,7 @@ const { request } = require('express')
 const inserirUsuario = async function (dadosUsuario) {
     if (dadosUsuario.email == '' || dadosUsuario.email == undefined || dadosUsuario.email.length > 100 ||
         dadosUsuario.senha == '' || dadosUsuario.senha == undefined ||
-        dadosUsuario.id_tipo_usuario == '' || dadosUsuario.id_tipo_usuario == undefined || isNaN(dadosTurma.id_tipo_usuario)
+        dadosUsuario.id_tipo_usuario == '' || dadosUsuario.id_tipo_usuario == undefined || isNaN(dadosUsuario.id_tipo_usuario)
 
     ) {
         return message.ERROR_REQUIRED_FIELDS

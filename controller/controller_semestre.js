@@ -18,11 +18,10 @@ const inserirSemestre = async function (dadosSemestre) {
     if (
         dadosSemestre.numero == '' || dadosSemestre.numero == undefined ||
         dadosSemestre.id_curso == '' || dadosSemestre.id_curso == undefined 
-     
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
-        let verificacaoCurso = await cursoDAO.selectCursoByID(dadosSemestre.id_mcurso)
+        let verificacaoCurso = await cursoDAO.selectCursoByID(dadosSemestre.id_curso)
 
         if (verificacaoCurso == false) {
             return message.ERROR_INVALID_ID
@@ -137,7 +136,7 @@ const getSemestreId = async function (id) {
         if(dadosSemestre) {
             dadosSemestreJSON.status = message.SUCESS_REQUEST.status
             dadosSemestreJSON.message = message.SUCESS_REQUEST.message
-            dadosSemestreJSON.semestre = dadosSemestr
+            dadosSemestreJSON.semestre = dadosSemestre
             return dadosSemestreJSON
         } else {
             return message.ERROR_NOT_FOUND

@@ -16,9 +16,8 @@ const inserirCriterio = async function (dadosCriterio) {
 
     if (dadosCriterio.descricao == '' || dadosCriterio.descricao == undefined ||
         dadosCriterio.resultado_desejado == '' || dadosCriterio.resultado_desejado == undefined ||
-        dadosCriterio.sigla == '' || dadosCriterio.sigla == undefined ||
-        dadosCurso.id_tipo_criterio == '' || dadosCurso.id_tipo_criterio == undefined ||
-        dadosCurso.id_tarefa == '' || dadosCurso.id_tarefa == undefined
+        dadosCriterio.id_tipo_criterio == '' || dadosCriterio.id_tipo_criterio == undefined ||
+        dadosCriterio.id_tarefa == '' || dadosCriterio.id_tarefa == undefined
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
@@ -38,13 +37,13 @@ const inserirCriterio = async function (dadosCriterio) {
         }
     }
 }
+
 const atualizarCriterio = async function (dadosCriterio, idCriterio) {
 
     if (dadosCriterio.descricao == '' || dadosCriterio.descricao == undefined ||
         dadosCriterio.resultado_desejado == '' || dadosCriterio.resultado_desejado == undefined ||
-        dadosCriterio.sigla == '' || dadosCriterio.sigla == undefined ||
-        dadosCurso.id_tipo_criterio == '' || dadosCurso.id_tipo_criterio == undefined ||
-        dadosCurso.id_tarefa == '' || dadosCurso.id_tarefa == undefined
+        dadosCriterio.id_tipo_criterio == '' || dadosCriterio.id_tipo_criterio == undefined ||
+        dadosCriterio.id_tarefa == '' || dadosCriterio.id_tarefa == undefined
     ) {
         return message.ERROR_REQUIRED_FIELDS
     } else if (idCriterio == '' || idCriterio == undefined || idCriterio == isNaN(idCriterio)) {
@@ -99,17 +98,18 @@ const deletarCriterio = async function (idCriterio) {
         return message.ERROR_NOT_FOUND 
     }
 }
+
 const getCriterio = async function () {
     let criterioJSON = {}
 
-    let criterio = await criterioDAO.selectAllCriterio
+    let dadosCriterio = await criterioDAO.selectAllCriterio()
 
-    if (criterio) {
+    if (dadosCriterio) {
 
         criterioJSON.status = message.SUCESS_REQUEST.status
         criterioJSON.message = message.SUCESS_REQUEST.message
-        criterioJSON.quantidade = cursos.length;
-        criterioJSON.criterios = criterio
+        criterioJSON.quantidade = dadosCriterio.length;
+        criterioJSON.criterios = dadosCriterio
 
         return criterioJSON
 
@@ -117,6 +117,7 @@ const getCriterio = async function () {
         return message.ERROR_NOT_FOUND
     }
 }
+
 module.exports ={
     inserirCriterio,
     atualizarCriterio,

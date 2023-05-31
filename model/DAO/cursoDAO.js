@@ -102,7 +102,7 @@ const selectCursoByID = async function (id) {
 
     let rsCurso = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCurso) {
+    if (rsCurso.length > 0) {
         return rsCurso;
     }
     else {

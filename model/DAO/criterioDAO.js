@@ -5,19 +5,23 @@
  * Versão: 1.0
  ***************************************************************************************************************************************************/
 
+//Import da biblioteca do prisma client
+var {PrismaClient} = require('@prisma/client')
+
+var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
 const insertCriterio = async function (dadosCriterio) {
     let sql = `insert into tbl_criterio (
         descricao,
         resultado_desejado,
-        id_tipo_criterio,
-        id_tarefa
+        id_tarefa,
+        id_tipo_criterio
     ) values (
         '${dadosCriterio.descricao}',
-        '${dadosCriterio.resultado_desejado}',
-        '${dadosCriterio.id_tipo_criterio}',
-        '${dadosCriterio.id_tarefa}'
+        ${dadosCriterio.resultado_desejado},
+        ${dadosCriterio.id_tarefa},
+        ${dadosCriterio.id_tipo_criterio}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -46,10 +50,10 @@ const deleteCriterio = async function (id) {
 const updateCriterio = async function (dadosCriterio) {
     let sql = `update tbl_criterio set
                     descricao = '${dadosCriterio.descricao}',
-                    resultado_desejado = '${dadosCriterio.resultado_desejado}',
-                    id_tipo_criterio = '${dadosCriterio.id_tipo_criterio}',
-                    id_tarefa = '${dadosCriterio.id_tarefa}'
-                where id = '${dadosCriterio.id}'        
+                    resultado_desejado = ${dadosCriterio.resultado_desejado},
+                    id_tipo_criterio = ${dadosCriterio.id_tipo_criterio},
+                    id_tarefa = ${dadosCriterio.id_tarefa}
+                where id = ${dadosCriterio.id}    
     `
 
     //Executa o scriptSQL no BD

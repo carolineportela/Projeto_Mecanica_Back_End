@@ -76,7 +76,7 @@ const atualizarTarefa = async function (dadosTarefa, idTarefa) {
 
                 dadosTarefaJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosTarefaJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosTarefaJSON.cursos = dadosCurso
+                dadosTarefaJSON.cursos = dadosTarefa
                 return dadosTarefaJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
@@ -114,13 +114,13 @@ const deletarTarefa = async function (idTarefa) {
 const getTarefas = async function () {
     let tarefasJSON = {}
 
-    let tarefas = await tarefaDAO.selectAllTarefas
+    let tarefas = await tarefaDAO.selectAllTarefas()
 
     if (tarefas) {
 
         tarefasJSON.status = message.SUCESS_REQUEST.status
         tarefasJSON.message = message.SUCESS_REQUEST.message
-        tarefasJSON.quantidade = cursos.length;
+        tarefasJSON.quantidade = tarefas.length;
         tarefasJSON.tarefa = tarefas
 
         return tarefasJSON
@@ -129,6 +129,7 @@ const getTarefas = async function () {
         return message.ERROR_NOT_FOUND
     }
 }
+
 const getTarefaPorID = async function (id) {
 
     if(id == '' || id == undefined || isNaN(id)) {
@@ -148,6 +149,7 @@ const getTarefaPorID = async function (id) {
         }
     }
 }
+
 module.exports = {
     inserirTarefa,
     atualizarTarefa,

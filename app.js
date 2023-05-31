@@ -722,7 +722,7 @@ app.get('/v1/mecanica/tipos/tarefas', cors(), async function (request, response)
 });
 
 //EndPoint: Exclui um tipo de tarefa existente, filtrando pelo ID
-app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/tipos/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idTipoTarefa = request.params.id;
     
@@ -738,7 +738,7 @@ app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (re
 });
 
 //EndPoint: Atualiza um tipo de tarefa pelo id
-app.put('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/mecanica/tipos/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
     //recebe o content-type da requisicao
     let contentType = request.headers['content-type'];
 
@@ -839,7 +839,7 @@ app.delete('/v1/mecanica/tarefa/:id', cors(), bodyParserJSON, async function (re
 app.get('/v1/mecanica/tarefas', cors(), bodyParserJSON, async function (request, response) {
  
      //Recebe os dados da controller do curso
-     let dadosCurso = await controllerCurso.getTarefas()
+     let dadosCurso = await controllerTarefa.getTarefas()
 
      response.status(dadosCurso.status)
      response.json(dadosCurso)
@@ -1073,7 +1073,7 @@ app.get('/v1/mecanica/semestres', cors(), bodyParserJSON, async function (reques
 });
 
 //EndPoint: Retorna o semestre pelo id
-app.get('/v1/mecanica/semestre/id/:id', cors(), bodyParserJSON, async function(request, response) {
+app.get('/v1/mecanica/semestre/:id', cors(), bodyParserJSON, async function(request, response) {
 
     let id = request.params.id
 
@@ -1111,7 +1111,6 @@ app.post('/v1/mecanica/registro/tempo', cors(), bodyParserJSON, async function (
 
 });
 
-
 //EndPoint: Exclui um registro de tempo existente, filtrando pelo ID
 app.delete('/v1/mecanica/registro/tempo/:id', cors(), bodyParserJSON, async function (request, response) {
     
@@ -1127,9 +1126,6 @@ app.delete('/v1/mecanica/registro/tempo/:id', cors(), bodyParserJSON, async func
        response.status(404);
    }
 });
-
-
-
 
 app.listen(8080, function () {
     console.log('Servidor aguardando requisição na porta 8080')

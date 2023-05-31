@@ -22,10 +22,10 @@ const insertTarefa = async function(dadosTarefa) {
         '${dadosTarefa.nome}',
         '${dadosTarefa.numero}',
         '${dadosTarefa.tempo_previsto}',
-        '${dadosTarefa.id_materia}',
-        '${dadosTarefa.id_tipo_tarefa}'
+        ${dadosTarefa.id_materia},
+        ${dadosTarefa.id_tipo_tarefa}
     )`
-
+        console.log(sql)
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
     if(resultStatus)
@@ -52,9 +52,9 @@ const updateTarefa = async function(dadosTarefa) {
                     nome = '${dadosTarefa.nome}',
                     numero = '${dadosTarefa.numero}',
                     tempo_previsto = '${dadosTarefa.tempo_previsto}',
-                    id_materia = '${dadosTarefa.id_materia}',
-                    id_tipo_tarefa = '${dadosTarefa.id_tipo_tarefa}'
-                where id = ${dadosAluno.id}    
+                    id_materia = ${dadosTarefa.id_materia},
+                    id_tipo_tarefa = ${dadosTarefa.id_tipo_tarefa}
+                where id = ${dadosTarefa.id}    
             `
 
     //Executa o scriptSQL no BD

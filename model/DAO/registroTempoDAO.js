@@ -25,7 +25,7 @@ const insertRegistroTempo = async function(dadosRegistroTempo) {
         '${dadosRegistroTempo.hora_termino}',
         '${dadosRegistroTempo.tempo_intervalo}',
         '${dadosRegistroTempo.observacao}',
-        '${dadosRegistroTempo.id_tarefa}'
+        ${dadosRegistroTempo.id_tarefa}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -44,7 +44,7 @@ const updateRegistroTempo = async function(dadosRegistroTempo) {
                     hora_termino = '${dadosRegistroTempo.hora_termino}',
                     tempo_intervalo = '${dadosRegistroTempo.tempo_intervalo}',
                     obsevacao = '${dadosRegistroTempo.observacao}',
-                    id_tarefa = '${dadosRegistroTempo.id_tarefa}'
+                    id_tarefa = ${dadosRegistroTempo.id_tarefa}
                 where id = ${dadosRegistroTempo.id}    
             `
 

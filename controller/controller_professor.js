@@ -46,7 +46,6 @@ const inserirProfessor = async function (dadosProfessor) {
 
 }
 
-
 const atualizarProfessor = async function (dadosProfessor, idProfessor) {
     if (dadosProfessor.nome == '' || dadosProfessor.nome == undefined || dadosProfessor.nome.length > 150 ||
         dadosProfessor.data_nascimento == '' || dadosProfessor.data_nascimento == undefined ||
@@ -86,6 +85,7 @@ const atualizarProfessor = async function (dadosProfessor, idProfessor) {
 }
 
 const deletarProfessor = async function (idProfessor) {
+    
     let statusId = await professorDAO.selectProfessorById(idProfessor);
 
     if (statusId) {
@@ -144,6 +144,7 @@ const getProfessores = async function () {
         return message.ERROR_NOT_FOUND
     }
 }
+
 module.exports = {
     inserirProfessor,
     deletarProfessor,

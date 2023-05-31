@@ -38,7 +38,9 @@ const insertProfessor = async function(dadosProfessor) {
 
 //////////////////////Deletes///////////////////////////
 const deleteProfessor = async function(id) {
-    let sql = `delete from tbl_professor where id = ${id}`
+    let idProfessor = id;
+
+    let sql = `delete from tbl_professor where id = ${idProfessor}`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -49,13 +51,13 @@ const deleteProfessor = async function(id) {
 }
 
 ///////////////////////Updates//////////////////////////
-const updateProfessor = async function(dadosProfessor, idMateria, idUsuario) {
+const updateProfessor = async function(dadosProfessor) {
      let sql = `update tbl_professor set
                     nome = '${dadosProfessor.nome}',
                     data_nascimento = '${dadosProfessor.data_nascimento}',
                     email = '${dadosProfessor.email}',
-                    id_materia = '${idMateria}',
-                    id_usuario = '${idUsuario}'
+                    id_materia = ${dadosProfessor.id_materia},
+                    id_usuario = ${dadosProfessor.id_usuario}
                 where id = ${dadosProfessor.id}    
             `
 
@@ -76,7 +78,7 @@ const selectProfessorById = async function(id) {
 
     let rsProfessorId = await prisma.$queryRawUnsafe(sql)
 
-    if(rsProfessorId > 0){
+    if(rsProfessorId.length > 0){
         return rsProfessorId
     }else{
         return false

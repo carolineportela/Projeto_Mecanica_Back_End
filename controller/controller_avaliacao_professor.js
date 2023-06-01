@@ -67,7 +67,7 @@ const atualizarAvaliacaoProfessor = async function (dadosAvaliacaoProfessor, idA
 
                 dadosAvaliacaoProfessorJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosAvaliacaoProfessorJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosAvaliacaoProfessorJSON.dados = dadosAvaliacaoProfessorJSON
+                dadosAvaliacaoProfessorJSON.dados = dadosAvaliacaoProfessor
                 return dadosAvaliacaoProfessorJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
@@ -88,7 +88,7 @@ const deletarAvaliacaoProfessor = async function (idAvaliacaoProfessor) {
         if (idAvaliacaoProfessor == '' || idAvaliacaoProfessor == undefined || isNaN(idAvaliacaoProfessor)) {
             return message.ERROR_INVALID_ID;
         } else {
-            let resultDadosAvaliacaoProfessor = await avaliacaoProfessorDAO.deletarAvaliacaoProfessor(idAvaliacaoProfessor)
+            let resultDadosAvaliacaoProfessor = await avaliacaoProfessorDAO.deleteAvaliacaoProfessor(idAvaliacaoProfessor)
 
             if (resultDadosAvaliacaoProfessor) {
                 return message.SUCESS_DELETED_ITEM
@@ -111,7 +111,7 @@ const getAvaliacaoProfessor = async function () {
 
         avaliacaoProfessorJSON.status = message.SUCESS_REQUEST.status
         avaliacaoProfessorJSON.message = message.SUCESS_REQUEST.message
-        avaliacaoProfessorJSON.quantidade = materias.length;
+        avaliacaoProfessorJSON.quantidade = avaliacoes.length;
         avaliacaoProfessorJSON.avaliacao = avaliacoes
 
         return avaliacaoProfessorJSON

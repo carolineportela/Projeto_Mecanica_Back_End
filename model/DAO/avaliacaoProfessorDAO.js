@@ -31,21 +31,34 @@ const insertAvaliacaoProfessor = async function (dadosAvaliacaoProfessor) {
 }
 
 ///////////////////////Updates//////////////////////////
-const updateAvaliacaoProfessor = async function (dadosAvaliacaoProfessor, idAvaliacaoProfessor) {
+const updateAvaliacaoProfessor = async function(dadosAvaliacaoProfessor) {
     let sql = `update tbl_avaliacao_professor set
-         '${dadosAvaliacaoProfessor.resultado}',
-         '${dadosAvaliacaoProfessor.id_professor}',
-         '${dadosAvaliacaoProfessor.id_criterio}'
+                    id_professor = '${dadosAvaliacaoProfessor.id_professor}',
+                    id_criterio = '${dadosAvaliacaoProfessor.id_criterio}'
                 where id = ${dadosAvaliacaoProfessor.id}    
             `
 
     //Executa o scriptSQL no BD
+    let resultStatus = await prisma.$executeRawUnsafe(sql);
+      if (resultStatus) {
+          return true;
+      } else {
+          return false;
+      }
+}
+
+const deleteAvaliacaoProfessor = async function(id) {
+    let idAvaliacaoProfessor = id;
+
+    let sql = `delete from tbl_avaliacao_professor where id = ${idAvaliacaoProfessor}`
+
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
-    if (resultStatus)
-        return true
-    else
-        return false
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -75,9 +88,24 @@ const selectAvaliacaoProfessorByID = async function (id) {
     }
 }
 
+const selectLastId = async function () {
+    let sql = `select * from tbl_avaliacao_professor order by id desc limit 1;`
+
+    let rsProfessor = await prisma.$queryRawUnsafe(sql)
+
+    if (rsProfessor.length > 0) {
+        return rsProfessor
+    } else {
+        return false;
+    }
+}
+
+
 module.exports = {
     insertAvaliacaoProfessor,
     selectAllAvaliacoesProfessores,
     selectAvaliacaoProfessorByID,
-    updateAvaliacaoProfessor
+    updateAvaliacaoProfessor,
+    selectLastId,
+    deleteAvaliacaoProfessor
 }

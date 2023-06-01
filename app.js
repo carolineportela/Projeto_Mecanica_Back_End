@@ -1219,6 +1219,30 @@ app.delete('/v1/mecanica/avaliacao/aluno/:id', cors(), bodyParserJSON, async fun
    }
 });
 
+//EndPoint: Atualiza uma avaliacao aluno pelo id
+app.put('/v1/mecanica/avaliacao/aluno/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+   if (String(contentType).toLowerCase() == 'application/json') {
+
+   let idAvaliacaoAluno = request.params.id;
+
+   let dadosBody = request.body;
+
+
+   let resultDadosAvaliacaoAluno = await controllerAvaliacaoAluno.atualzarAvaliacaoAluno(dadosBody, idAvaliacaoAluno);
+
+   response.status(resultDadosAvaliacaoAluno.status)
+   response.json(resultDadosAvaliacaoAluno)
+
+} else {
+   response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+   response.json(message.ERROR_INVALID_CONTENT_TYPE)
+}
+
+});
+
 
 //EndPoint: Retorna todas as avaliacoes aluno
 app.get('/v1/mecanica/avaliacao/aluno', cors(), bodyParserJSON, async function (request, response) {
@@ -1232,7 +1256,7 @@ app.get('/v1/mecanica/avaliacao/aluno', cors(), bodyParserJSON, async function (
 
 
 //EndPoint: Retorna a avaliacao aluno pelo id
-app.get('/v1/mecanica/avaliacao/aluno/id/:id', cors(), bodyParserJSON, async function(request, response) {
+app.get('/v1/mecanica/avaliacao/aluno/:id', cors(), bodyParserJSON, async function(request, response) {
 
     let id = request.params.id
 
@@ -1241,6 +1265,7 @@ app.get('/v1/mecanica/avaliacao/aluno/id/:id', cors(), bodyParserJSON, async fun
     response.status(dadosAvaliacaoAluno.status)
     response.json(dadosAvaliacaoAluno)
 })
+
 
 
 /////////////////////////////////////////Avaliacao Professor//////////////////////////////////////////////
@@ -1297,7 +1322,7 @@ app.put('/v1/mecanica/avaliacao/professor/:id', cors(), bodyParserJSON, async fu
 
 
 //EndPoint: Exclui uma avaliacao do professor existente, filtrando pelo ID
-app.delete('/v1/mecanica/avaliacao/professor:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/avaliacao/professor/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idAvaliacaoProfessor = request.params.id;
 

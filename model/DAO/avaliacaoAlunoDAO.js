@@ -30,6 +30,36 @@ const insertAvaliacaoAluno = async function (dadosAvaliacaoAluno) {
 
 }
 
+const updateAvaliacaoAluno = async function(dadosAvaliacaoAluno) {
+    let sql = `update tbl_avaliacao_aluno set
+                    id_aluno = '${dadosAvaliacaoAluno.id_aluno}',
+                    id_criterio = '${dadosAvaliacaoAluno.id_criterio}'
+                where id = ${dadosAvaliacaoAluno.id}    
+            `
+
+    //Executa o scriptSQL no BD
+    let resultStatus = await prisma.$executeRawUnsafe(sql);
+      if (resultStatus) {
+          return true;
+      } else {
+          return false;
+      }
+}
+
+const deleteAvaliacaoAluno = async function(id) {
+    let idAvaliacaoAluno = id;
+
+    let sql = `delete from tbl_avaliacao_aluno where id = ${idAvaliacaoAluno}`
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 const selectAllAvaliacoesAlunos = async function() {
 
     let sql = `select * from tbl_avaliacao_aluno`
@@ -72,5 +102,7 @@ module.exports = {
     insertAvaliacaoAluno,
     selectAllAvaliacoesAlunos,
     selectAvaliacaoAlunoByID,
-    selectLastId
+    selectLastId,
+    updateAvaliacaoAluno,
+    deleteAvaliacaoAluno
 }

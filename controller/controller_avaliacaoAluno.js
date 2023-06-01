@@ -15,7 +15,7 @@ const { request } = require('express')
 
 
 const inserirAvaliacaoAluno = async function (dadosAvaliacaoAluno) {
-    if (dadosAvaliacaoAluno.resultado == '' || dadosUsuario.resultado == undefined ||
+    if (dadosAvaliacaoAluno.resultado == '' || dadosAvaliacaoAluno.resultado == undefined ||
         dadosAvaliacaoAluno.id_aluno == '' || dadosAvaliacaoAluno.id_aluno == undefined ||
         dadosAvaliacaoAluno.id_criterio == '' || dadosAvaliacaoAluno.id_criterio == undefined
 

@@ -19,10 +19,10 @@ const inserirTurmaMateria = async function (dadosTurmaMateria) {
         return message.ERROR_REQUIRED_FIELDS
     } else {
 
-        let resultDadosTurmaMateria = await turmaMateria.insertTurmaMateria(dadosTurmaMateria)
+        let resultDadosTurmaMateria = await turmaMateriaDAO.insertTurmaMateria(dadosTurmaMateria)
 
         if (resultDadosTurmaMateria) {
-            let novaTurmaMateria = await turmaMateria.selectLastId()
+            let novaTurmaMateria = await turmaMateriaDAO.selectLastId()
 
             let dadosTurmaMateriaJSON = {}
             dadosTurmaMateriaJSON.status = message.SUCESS_CREATED_ITEM.status
@@ -47,20 +47,20 @@ const atualizarTurmaMateria = async function (dadosTurmaMateria, idTurmaMateria)
         //Adiciona o id do curso no JSON dos dados
         dadosTurmaMateria.id = idTurmaMateria;
 
-        let statusId = await turma.selectCursoByID(idCurso)
+        let statusId = await turmaMateriaDAO.selectTurmaMateriaByID(idTurmaMateria)
 
         if (statusId) {
 
-            let resultDadosCurso = await turmaMateria.updateTurmaMateria(dadosTurmaMateria);
+            let resultDadosTurmaMateria = await turmaMateriaDAO.updateTurmaMateria(dadosTurmaMateria);
 
-            if (resultDadosCurso) {
+            if (resultDadosTurmaMateria) {
 
-                let dadosCursosJSON = {}
+                let resultDadosTurmaMateriaJSON = {}
 
-                dadosCursosJSON.status = message.SUCESS_UPDATED_ITEM.status
-                dadosCursosJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosCursosJSON.cursos = dadosCurso
-                return dadosCursosJSON
+                resultDadosTurmaMateriaJSON.status = message.SUCESS_UPDATED_ITEM.status
+                resultDadosTurmaMateriaJSON.message = message.SUCESS_UPDATED_ITEM.message
+                resultDadosTurmaMateriaJSON.turmasMaterias = resultDadosTurmaMateria
+                return resultDadosTurmaMateriaJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
 
@@ -112,10 +112,30 @@ const getTurmaMateria = async function () {
         return message.ERROR_NOT_FOUND
     }
 }
+const getTurmaMateriaID = async function (id) {
+
+    if(id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosTurmaMateriaJSON = {}
+
+        let dadosTurmaMateria = await turmaMateriaDAO.selectTurmaMateriaByID(id)
+
+        if(dadosTurmaMateria) {
+            dadosTurmaMateriaJSON.status = message.SUCESS_REQUEST.status
+            dadosTurmaMateriaJSON.message = message.SUCESS_REQUEST.message
+            dadosTurmaMateriaJSON.turmaMateria = dadosTurmaMateria
+            return dadosTurmaMateriaJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
 
 module.exports = {
     inserirTurmaMateria,
     atualizarTurmaMateria,
     deletarTurmaMateria,
-    getTurmaMateria
+    getTurmaMateria,
+    getTurmaMateriaID
 }

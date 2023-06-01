@@ -52,6 +52,7 @@ var controllerAvaliacaoAluno =  require('./controller/controller_avaliacaoAluno.
 var controllerAvaliacaoProfessor =  require('./controller/controller_avaliacao_professor.js');
 var controllerResultadoObtido =  require('./controller/controller_resultado_obtido.js');
 var controllerTurmaMateria = require('./controller/controller_turma_materia.js');
+var controllerAlunoTarefa = require('./controller/controller_aluno_tarefa.js');
 
 /////////////////////////////////////////Tipo_Usuario//////////////////////////////////////////////
 
@@ -288,7 +289,6 @@ app.post('/v1/mecanica/turma', cors(), bodyParserJSON, async function (request, 
     }
 
 });
-
 
 //EndPoint: Put -  Atualiza turma pelo id
 app.put('/v1/mecanica/turma/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -892,6 +892,27 @@ app.post('/v1/mecanica/turma/materia', cors(), bodyParserJSON, async function (r
 
 });
 
+//EndPoint: Retorna todos id turmas_materias
+app.get('/v1/mecanica/turmas/materias', cors(), bodyParserJSON, async function (request, response) {
+ 
+    //Recebe os dados da controller da turma_materia
+    let dadosMateria = await controllerTurmaMateria.getTurmaMateria()
+
+    response.status(dadosMateria.status)
+    response.json(dadosMateria)
+});
+
+//EndPoint: Retorna a materia pelo id
+app.get('/v1/mecanica/turmas/materias/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+ 
+    let dadosTurmaMateria = await controllerTurmaMateria.getTurmaMateriaID(id)
+ 
+    response.status(dadosTurmaMateria.status)
+    response.json(dadosTurmaMateria)
+ })
+
 //EndPoint: Atualiza 
 app.put('/v1/mecanica/turma/materia/:id', cors(), bodyParserJSON, async function (request, response) {
          //reccebe o content-type da requisicao
@@ -934,6 +955,7 @@ app.delete('/v1/mecanica/turma/materia/:id', cors(), bodyParserJSON, async funct
    }
 });
 
+
 /////////////////////////////////////////Criterio//////////////////////////////////////////////
 
 /********************************
@@ -964,27 +986,27 @@ app.post('/v1/mecanica/criterio', cors(), bodyParserJSON, async function (reques
 
 //EndPoint: Atualiza criterio pelo id
 app.put('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (request, response) {
-         //reccebe o content-type da requisicao
-         let contentType = request.headers['content-type'];
+    //reccebe o content-type da requisicao
+    let contentType = request.headers['content-type'];
 
-        //Validacao para receber dados apenas no formato JSON
-        if (String(contentType).toLowerCase() == 'application/json') {
+   //Validacao para receber dados apenas no formato JSON
+   if (String(contentType).toLowerCase() == 'application/json') {
 
-        let idCriterio = request.params.id;
+   let idCriterio = request.params.id;
 
-        //Recebe os dados do curso encaminhado no corpo da requisição
-        let dadosBody = request.body;
+   //Recebe os dados do curso encaminhado no corpo da requisição
+   let dadosBody = request.body;
 
-        //Encaminha os dados para a controller
-        let resultDadosCriterio = await controllerCriterio.atualizarCriterio(dadosBody, idCriterio);
+   //Encaminha os dados para a controller
+   let resultDadosCriterio = await controllerCriterio.atualizarCriterio(dadosBody, idCriterio);
 
-        response.status(resultDadosCriterio.status)
-        response.json(resultDadosCriterio)
+   response.status(resultDadosCriterio.status)
+   response.json(resultDadosCriterio)
 
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
+} else {
+   response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+   response.json(message.ERROR_INVALID_CONTENT_TYPE)
+}
 
 });
 
@@ -1003,6 +1025,7 @@ app.delete('/v1/mecanica/criterio/:id', cors(), bodyParserJSON, async function (
        response.status(404);
    }
 });
+
 
 //EndPoint: Retorna todos os criterios
 app.get('/v1/mecanica/criterios', cors(), bodyParserJSON, async function (request, response) {
@@ -1181,7 +1204,7 @@ app.post('/v1/mecanica/avaliacao/aluno', cors(), bodyParserJSON, async function 
 });
 
 //EndPoint: Exclui uma avaliacao de aluno existente, filtrando pelo ID
-app.delete('/v1/mecanica/avaliacao/aluno:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/mecanica/avaliacao/aluno/:id', cors(), bodyParserJSON, async function (request, response) {
     
     let idAvaliacaoAluno = request.params.id;
 
@@ -1382,7 +1405,94 @@ app.delete('/v1/mecanica/resultado/:id', cors(), bodyParserJSON, async function 
 });
 
 
+/////////////////////////////////////// Aluno Tarefa - Intermediaria //////////////////////////////////////////////////////
 
+/********************************
+* Objetivo : API de controle de Aluno Tarefa
+* Data : 31/05/2023
+********************************/
+
+//EndPoint: Post - Insere os id de aluno e tarefa
+app.post('/v1/mecanica/aluno/tarefa', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let resultDadosAlunoTarefa = await controllerAlunoTarefa.inserirAlunoTarefa(dadosBody);
+
+        response.status(resultDadosAlunoTarefa.status)
+        response.json(resultDadosAlunoTarefa)
+       
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: Put - Atualiza os id de aluno e tarefa
+app.put('/v1/mecanica/aluno/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let idAlunoTarefa = request.params.id
+
+        let dadosBody = request.body
+
+        let resultDadosAlunoTarefa = await controllerAlunoTarefa.atualizarAlunoTarefa(dadosBody, idAlunoTarefa)
+
+        response.status(resultDadosAlunoTarefa.status)
+        response.json(resultDadosAlunoTarefa)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+
+})
+
+//EndPoint: Get - Retorna todos 
+app.get('/v1/mecanica/alunos/tarefas', cors(), async function (request, response) {
+
+    //Recebe os dados da controller
+    let dados = await controllerAlunoTarefa.getAlunoTarefa()
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: Retorna pelo id
+app.get('/v1/mecanica/aluno/tarefa/:id', cors(), bodyParserJSON, async function(request, response) {
+
+    let id = request.params.id
+
+    let dadosAlunoTarefa = await controllerAlunoTarefa.getAlunoTarefaID(id)
+
+    response.status(dadosAlunoTarefa.status)
+    response.json(dadosAlunoTarefa)
+})
+
+
+//EndPoint: Exclui pelo id
+app.delete('/v1/mecanica/alunos/tarefa/:id', cors(), bodyParserJSON, async function (request, response) {
+    
+    let idAlunoTarefa = request.params.id;
+
+
+    let resultDadosAlunoTarefa = await controllerAlunoTarefa.deletarAlunoTarefa(idAlunoTarefa)
+
+    if (resultDadosAlunoTarefa) {
+       response.json(resultDadosAlunoTarefa);
+       response.status(200);
+   } else {
+       response.json();
+       response.status(404);
+   }
+});
 
 
 

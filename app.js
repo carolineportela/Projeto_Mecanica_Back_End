@@ -197,7 +197,7 @@ app.post('/v1/mecanica/curso', cors(), bodyParserJSON, async function (request, 
     }
 
 });
-
+//teste
 //EndPoint: Atualiza curso pelo id
 app.put('/v1/mecanica/curso/:id', cors(), bodyParserJSON, async function (request, response) {
          //reccebe o content-type da requisicao
